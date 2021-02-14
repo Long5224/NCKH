@@ -1,4 +1,4 @@
-import Index from '../pages/index'
+import Index from '../pages/General-Info'
 import Score from '../pages/Score'
 import Study_Schedule from '../pages/Study_Schedule'
 import Test_Schedule from '../pages/Test_Schedule'
