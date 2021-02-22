@@ -66,7 +66,7 @@ const MainNavbar = (props) => {
                     <img
                       alt="..."
                       src={
-                        require("../../assets/img/theme/team-4-800x800.jpg")
+                        require("../../assets/images/User_Img.png")
                           .default
                       }
                     />

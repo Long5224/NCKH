@@ -140,15 +140,29 @@ const index = () => {
                     Thông tin sinh viên
                   </h6>
                   <div className="pl-lg-4">
-                    <Row></Row>
                     <Row>
-                      <Col lg="4">
+                      <Col lg="6">
+                        <FormGroup>
+                          <label
+                            className="form-control-label"
+                            htmlFor="input-dateOfBirth"
+                          >
+                            Ngày sinh
+                          </label>
+                          <Input
+                            className="form-control-alternative"
+                            id="input-dateOfBirth"
+                            type="date"
+                          />
+                        </FormGroup>
+                      </Col>
+                      <Col lg="6">
                         <FormGroup>
                           <label
                             className="form-control-label"
                             htmlFor="input-department"
                           >
-                            Khoa
+                            Khóa
                           </label>
                           <Input id="input-faculty" type="select">
                             <option>61</option>
@@ -159,7 +173,9 @@ const index = () => {
                           </Input>
                         </FormGroup>
                       </Col>
-                      <Col lg="4">
+                    </Row>
+                    <Row>
+                      <Col lg="6">
                         <FormGroup>
                           <label
                             className="form-control-label"
@@ -176,7 +192,7 @@ const index = () => {
                           </Input>
                         </FormGroup>
                       </Col>
-                      <Col lg="4">
+                      <Col lg="6">
                         <FormGroup>
                           <label
                             className="form-control-label"

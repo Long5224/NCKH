@@ -4,3 +4,14 @@
     color: #5e72e4  !important;
 }
 
+@media (max-width: 890px){
+    .btn-edit{
+        width: 100px;
+    }
+}
+
+@media (max-width: 768px){
+    .btn-edit{
+        width: auto;
+    }
+}

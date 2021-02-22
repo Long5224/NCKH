@@ -32,7 +32,7 @@ const UserHeader = () => {
   return (
     <>
       <div
-        className="header pb-8 pt-5 pt-lg-8 pt-md-8 align-items-center"
+        className="header pb-8 pt-6 pt-lg-8 pt-md-8 align-items-center"
         style={{
           minHeight: "600px",
           backgroundColor: "",
@@ -64,7 +64,7 @@ const UserHeader = () => {
                 <CardHeader className="text-center border-0 pt-8 pt-md-4 pb-0 pb-md-4">
                   <div className="d-flex justify-content-between">
                     <Button
-                      className="mr-4"
+                      className="mr-4 btn-edit"
                       color="info"
                       href="#pablo"
                       onClick={(e) => e.preventDefault()}
