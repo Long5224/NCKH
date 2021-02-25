@@ -41,7 +41,7 @@ const MainNavbar = (props) => {
       <Navbar className="navbar-top navbar-dark" expand="md" id="navbar-main">
         <Container fluid>
           <Link
-            className="h4 mb-0 text-primary text-uppercase d-none d-lg-inline-block "
+            className="h4 mb-0 text-white text-uppercase d-none d-lg-inline-block "
             to="/"
           >
             {props.brandText}
@@ -51,7 +51,7 @@ const MainNavbar = (props) => {
               <InputGroup className="input-group-alternative">
                 <InputGroupAddon addonType="prepend">
                   <InputGroupText>
-                    <i className="fas fa-search" style={{color: "#5e72e4"}} />
+                    <i className="fas fa-search" style={{color: "white"}} />
                   </InputGroupText>
                 </InputGroupAddon>
                 <Input place holder="Search" type="text" id="search-navbar" />
@@ -72,7 +72,7 @@ const MainNavbar = (props) => {
                     />
                   </span>
                   <Media className="ml-2 d-none d-lg-block">
-                    <span className="mb-0 text-primary text-sm font-weight-bold">
+                    <span className="mb-0 text-sm font-weight-bold">
                       Phạm Hoàng Long
                     </span>
                   </Media>

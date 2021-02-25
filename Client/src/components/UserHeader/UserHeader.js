@@ -32,7 +32,7 @@ const UserHeader = () => {
   return (
     <>
       <div
-        className="header pb-8 pt-6 pt-lg-8 pt-md-8 align-items-center"
+        className="header bg-edit-header pb-8 pt-6 pt-lg-8 pt-md-8 align-items-center"
         style={{
           minHeight: "600px",
           backgroundColor: "",

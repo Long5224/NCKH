@@ -1,8 +1,6 @@
 /*Edit navbar*/
 
-.navbar-search-dark .form-control{
-    color: #5e72e4  !important;
-}
+
 
 @media (max-width: 890px){
     .btn-edit{
@@ -14,4 +12,12 @@
     .btn-edit{
         width: auto;
     }
+}
+
+.bg-edit-header {
+    background-color: #11cdef !important;
+}
+
+.height.edit-table {
+    height: 250px !important;
 }
