@@ -41,7 +41,7 @@ const MainNavbar = (props) => {
       <Navbar className="navbar-top navbar-dark" expand="md" id="navbar-main">
         <Container fluid>
           <Link
-            className="h4 mb-0 text-white text-uppercase d-none d-lg-inline-block"
+            className="h4 mb-0 text-white text-uppercase d-none d-lg-inline-block "
             to="/"
           >
             {props.brandText}
@@ -51,10 +51,10 @@ const MainNavbar = (props) => {
               <InputGroup className="input-group-alternative">
                 <InputGroupAddon addonType="prepend">
                   <InputGroupText>
-                    <i className="fas fa-search" />
+                    <i className="fas fa-search" style={{color: "white"}} />
                   </InputGroupText>
                 </InputGroupAddon>
-                <Input place holder="Search" type="text" />
+                <Input place holder="Search" type="text" id="search-navbar" />
               </InputGroup>
             </FormGroup>
           </Form>
@@ -66,14 +66,14 @@ const MainNavbar = (props) => {
                     <img
                       alt="..."
                       src={
-                        require("../../assets/img/theme/team-4-800x800.jpg")
+                        require("../../assets/images/User_Img.png")
                           .default
                       }
                     />
                   </span>
                   <Media className="ml-2 d-none d-lg-block">
                     <span className="mb-0 text-sm font-weight-bold">
-                      Jessica Jones
+                      Phạm Hoàng Long
                     </span>
                   </Media>
                 </Media>
@@ -84,24 +84,24 @@ const MainNavbar = (props) => {
                 </DropdownItem>
                 <DropdownItem to="/admin/user-profile" tag={Link}>
                   <i className="ni ni-single-02" />
-                  <span>My profile</span>
+                  <span>Thông tin cá nhân</span>
                 </DropdownItem>
                 <DropdownItem to="/admin/user-profile" tag={Link}>
                   <i className="ni ni-settings-gear-65" />
-                  <span>Settings</span>
+                  <span>Cài đặt</span>
                 </DropdownItem>
                 <DropdownItem to="/admin/user-profile" tag={Link}>
                   <i className="ni ni-calendar-grid-58" />
-                  <span>Activity</span>
+                  <span>Hoạt động</span>
                 </DropdownItem>
                 <DropdownItem to="/admin/user-profile" tag={Link}>
                   <i className="ni ni-support-16" />
-                  <span>Support</span>
+                  <span>Hỗ trợ</span>
                 </DropdownItem>
                 <DropdownItem divider />
                 <DropdownItem href="#pablo" onClick={(e) => e.preventDefault()}>
                   <i className="ni ni-user-run" />
-                  <span>Logout</span>
+                  <span>Đăng xuất</span>
                 </DropdownItem>
               </DropdownMenu>
             </UncontrolledDropdown>

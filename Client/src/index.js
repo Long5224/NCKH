@@ -5,6 +5,7 @@ import App from './App';
 import 'bootstrap/dist/css/bootstrap.css';
 import "./assets/plugins/nucleo/css/nucleo.css";
 import "./assets/scss/argon-dashboard-react.scss";
+import "./assets/css/edit-style.css";
 ReactDOM.render(
   <React.StrictMode>
     <App />

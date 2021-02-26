@@ -1,0 +1,23 @@
+/*Edit navbar*/
+
+
+
+@media (max-width: 890px){
+    .btn-edit{
+        width: 100px;
+    }
+}
+
+@media (max-width: 768px){
+    .btn-edit{
+        width: auto;
+    }
+}
+
+.bg-edit-header {
+    background-color: #11cdef !important;
+}
+
+.height.edit-table {
+    height: 250px !important;
+}
