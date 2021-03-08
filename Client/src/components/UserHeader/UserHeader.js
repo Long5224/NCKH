@@ -17,6 +17,7 @@
 */
 import React from "react";
 
+
 // reactstrap components
 import {
   Button,
@@ -28,7 +29,8 @@ import {
   CardBody,
 } from "reactstrap";
 
-const UserHeader = () => {
+const UserHeader = (props) => {
+  
   return (
     <>
       <div
@@ -41,7 +43,7 @@ const UserHeader = () => {
         }}
       >
         {/* Header container */}
-        <Container className="align-items-center " fluid>
+        <Container className="align-items-center " >
           <Row>
             <Col lg="12" md="12" xl="12">
               <Card className="card-profile shadow">
@@ -53,8 +55,7 @@ const UserHeader = () => {
                           alt="..."
                           className="rounded-circle"
                           src={
-                            require("../../assets/images/User_Img.png")
-                              .default
+                            require("../../assets/images/User_Img.png").default
                           }
                         />
                       </a>
@@ -63,15 +64,19 @@ const UserHeader = () => {
                 </Row>
                 <CardHeader className="text-center border-0 pt-8 pt-md-4 pb-0 pb-md-4">
                   <div className="d-flex justify-content-between">
-                    <Button
-                      className="mr-4 btn-edit"
-                      color="info"
-                      href="#pablo"
-                      onClick={(e) => e.preventDefault()}
-                      size="sm"
-                    >
-                      Thay đổi ảnh đại diện
-                    </Button>
+                    {
+                      window.location.pathname === "/home/teacher" ? "" :
+                      ( <Button
+                        className="mr-4 btn-edit"
+                        color="info"
+                        href="#pablo"
+                        onClick={(e) => e.preventDefault()}
+                        size="sm"
+                      >
+                        Thay đổi ảnh đại diện
+                      </Button>)
+                    }
+
                     <Button
                       className="float-right"
                       color="default"
@@ -79,7 +84,7 @@ const UserHeader = () => {
                       onClick={(e) => e.preventDefault()}
                       size="sm"
                     >
-                      Tin nhắn
+                     Tin nhắn
                     </Button>
                   </div>
                 </CardHeader>

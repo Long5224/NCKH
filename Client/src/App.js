@@ -2,7 +2,7 @@ import React from "react";
 import { BrowserRouter, Route, Switch, Redirect } from "react-router-dom";
 
 import HomePage from './layout/HomeLayout'
-import LoginPage from './layout/Login'
+import LoginPage from './layout/LoginLayout'
 function App() {
   return (
     <BrowserRouter>

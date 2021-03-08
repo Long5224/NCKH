@@ -16,7 +16,12 @@ import {
   Table,
   Container,
   Row,
- 
+  Form,
+  FormGroup,
+  Input,
+  InputGroupAddon,
+  InputGroupText,
+  InputGroup,
 } from "reactstrap";
 // core components
 
@@ -27,21 +32,45 @@ const Tables = () => {
       <Header />
 
       {/* Page content */}
-      <Container className="mt--7" fluid>
+      <Container className="mt--8" >
         {/* Table */}
         <Row>
           <div className="col">
             <Card className="shadow">
-              <CardHeader className="border-0">
-                <h3 className="mb-0">Điểm thi</h3>
+              <CardHeader className="border-1">
+                <h3 className="mb-0 mt-2">Điểm thi</h3>
               </CardHeader>
+              <Form className="">
+                <div className="p-2 d-flex resFlex-column">
+                  <FormGroup className="mb-0 ml-auto edit-form-group ">
+                    <InputGroup className="">
+                      <InputGroupAddon addonType="prepend">
+                        <InputGroupText>
+                          <i className="ni ni-zoom-split-in" />
+                        </InputGroupText>
+                      </InputGroupAddon>
+                      <Input placeholder="Search" type="text" />
+                    </InputGroup>
+                  </FormGroup>
+                </div>
                 <Table className="align-items-center table-flush " responsive>
                   <thead className="thead-light">
                     <tr>
-                      <th scope="col">Học phần</th>
-                      <th scope="col">Điểm thành phần</th>
-                      <th scope="col">Điểm thi cuối kì</th>
-                      <th scope="col">Điểm tổng kết</th>
+                      <th scope="col">
+                        Học phần <i className="fas fa-sort"></i>
+                      </th>
+                      <th scope="col">
+                        Điểm thành phần <i className="fas fa-sort"></i>
+                      </th>
+                      <th scope="col">
+                        Điểm thi cuối kì <i className="fas fa-sort"></i>
+                      </th>
+                      <th scope="col">
+                        Điểm tổng kết <i className="fas fa-sort"></i>
+                      </th>
+                      <th scope="col">
+                        Lần thi <i className="fas fa-sort"></i>
+                      </th>
                       <th scope="col" />
                     </tr>
                   </thead>
@@ -59,6 +88,8 @@ const Tables = () => {
                       <td>10</td>
 
                       <td>10</td>
+
+                      <td>1</td>
 
                       <td className="text-right">
                         <UncontrolledDropdown>
@@ -97,6 +128,8 @@ const Tables = () => {
                     </tr>
                   </tbody>
                 </Table>
+              </Form>
+
               <CardFooter className="py-4">
                 <nav aria-label="...">
                   <Pagination

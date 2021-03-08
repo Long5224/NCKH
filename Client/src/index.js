@@ -7,9 +7,9 @@ import "./assets/plugins/nucleo/css/nucleo.css";
 import "./assets/scss/argon-dashboard-react.scss";
 import "./assets/css/edit-style.css";
 ReactDOM.render(
-  <React.StrictMode>
+  <React.Fragment>
     <App />
-  </React.StrictMode>,
+  </React.Fragment>,
   document.getElementById('root')
 );
 

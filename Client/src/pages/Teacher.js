@@ -1,10 +1,16 @@
-import React from 'react'
 
- function index(props) {
-    return (
-        <div>
-            <h1>Cố vấn học tập</h1>
-        </div>
-    )
-}
-export default index
+import React from "react";
+
+// core components
+import UserHeader from "../components/UserHeader/UserHeader";
+
+const Teacher = (props) => {
+  
+  return (
+    <>
+      <UserHeader />
+    </>
+  );
+};
+
+export default Teacher;

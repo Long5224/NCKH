@@ -1431,6 +1431,7 @@ pre {
   .table-responsive-sm {
     display: block;
     width: 100%;
+    height: 250px;
     overflow-x: auto;
     -webkit-overflow-scrolling: touch; }
     .table-responsive-sm > .table-bordered {
@@ -1440,6 +1441,7 @@ pre {
   .table-responsive-md {
     display: block;
     width: 100%;
+    height: 250px;
     overflow-x: auto;
     -webkit-overflow-scrolling: touch; }
     .table-responsive-md > .table-bordered {
@@ -1449,6 +1451,7 @@ pre {
   .table-responsive-lg {
     display: block;
     width: 100%;
+    height: 250px;
     overflow-x: auto;
     -webkit-overflow-scrolling: touch; }
     .table-responsive-lg > .table-bordered {
@@ -1458,6 +1461,7 @@ pre {
   .table-responsive-xl {
     display: block;
     width: 100%;
+    height: 250px;
     overflow-x: auto;
     -webkit-overflow-scrolling: touch; }
     .table-responsive-xl > .table-bordered {

@@ -8,7 +8,6 @@ import Footer from '../components/Footer/Footer'
 function HomeLayout(props) {
     const mainContent = React.useRef(null);
     const location = useLocation();
-
     React.useEffect(() => {
         document.documentElement.scrollTop = 0;
         document.scrollingElement.scrollTop = 0;
