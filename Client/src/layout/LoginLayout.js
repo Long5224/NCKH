@@ -67,7 +67,7 @@ const Login = (props) => {
           <Row className="justify-content-center">
             <Switch>
               {getRoutes(routes)}
-              <Redirect from="*" to="/login" />
+    
             </Switch>
           </Row>
         </Container>

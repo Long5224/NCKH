@@ -16,7 +16,17 @@ namespace Server.Repositories.Imp
 
         ISemesterRespository Semester { get; }
 
-       
+       ICourseClassRespository CourseClass { get; }
+
+       ITeacherRespository Teacher { get; }
+        
+        IEvaluationRespository Evaluation { get; }
+
+        IResultRespository Result { get; }
+
+        IUserRespository User { get; }
+
+        IParentRespository Parent { get; }
         void Save();
     }
 }

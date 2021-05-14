@@ -10,7 +10,5 @@ namespace Server.DTO
         public long id { get; set; }
 
         public string name { get; set; }
-
-        public IEnumerable<ClassDTO> Classes { get; set; }
     }
 }

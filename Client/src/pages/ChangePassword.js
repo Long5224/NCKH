@@ -8,10 +8,7 @@ import {
   CardBody,
   UncontrolledAlert,
   Form,
-  Input,
-  FormGroup,
-  Label,
-  Button,
+
 } from "reactstrap";
 function index(props) {
   return (

@@ -78,5 +78,41 @@
     font-size: 0.9rem;
     color: #999;
   }
+ .badge-study-schedule {
+   top: 30%;
+   right: 57%;
+ }
 
-/*custom form*/
+ .title-table{
+   cursor: pointer;
+ }
+
+ .title-table:hover {
+  color: #5e72e4;
+ }
+
+ .btn-add-notification{
+   border-radius: 50%;
+   border: 1px solid #dee2e6;
+   width: 36px;
+   height: 36px;
+   padding: 0;
+   display: flex;
+   align-items: center;
+   justify-content: center;
+ }
+
+ .btn-add-notification:hover {
+  color: #5e72e4;
+ }
+
+ .seeMore {
+   cursor: pointer;
+ }
+
+ .seeMore:hover {
+  color: #5e72e4;
+ }
+/**/
+/*custom pagination*/
+

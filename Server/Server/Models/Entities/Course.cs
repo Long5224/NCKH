@@ -16,11 +16,14 @@ namespace Server.Models.Entities
         [Column(TypeName = "nvarchar(100)")]
         public string name { get; set; }
 
+        public ICollection<StudyTime> StudyTimes { get; set; }
+
         [ForeignKey("Semesterid")]
         public long Semesterid { get; set; }
 
         public Semester Semester { get; set; }
 
-        public ICollection<CourseClass> CourseClasses { get; set; }
+
+
     }
 }

@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Server.Helper;
 using Server.Models;
+using Server.Models.Entities;
 
 namespace Server.Repositories.Imp
 {
@@ -14,9 +15,16 @@ namespace Server.Repositories.Imp
         private IClassRepository _class;
         private IFacultyRepository _faculty;
         private ISemesterRespository _semester;
+        private IParentRespository _parent;
+        private IUserRespository _user;
+        private ITeacherRespository _teacher;
+        private IEvaluationRespository _evaluation;
+        private IResultRespository _result;
+        private ICourseClassRespository _courseClass;
         private IDataShaper<Student> _studentDataShaper;
         private IDataShaper<Class> _classDataShaper;
         private IDataShaper<Faculty> _facultyDataShaper;
+       
         public RepositoryWrapper(NCKH_DBContext repositoryContext, IDataShaper<Student> studentDataShaper, IDataShaper<Class> classDataShaper
             ,IDataShaper<Faculty> facultyDataShaper)
         {
@@ -70,6 +78,78 @@ namespace Server.Repositories.Imp
                     _semester = new SemesterRespository(_repoContext);
                 }
                 return _semester;
+            }
+        }
+
+        public ICourseClassRespository CourseClass
+        {
+            get
+            {
+                if (_courseClass == null)
+                {
+                    _courseClass = new CourseClassRespository(_repoContext);
+                }
+                return _courseClass;
+            }
+        }
+
+        public ITeacherRespository Teacher
+        {
+            get
+            {
+                if (_teacher == null)
+                {
+                    _teacher = new TeacherRespository(_repoContext);
+                }
+                return _teacher;
+            }
+        }
+
+        public IEvaluationRespository Evaluation
+        {
+            get
+            {
+                if (_evaluation == null)
+                {
+                    _evaluation = new EvaluationRespository(_repoContext);
+                }
+                return _evaluation;
+            }
+        }
+
+        public IResultRespository Result
+        {
+            get
+            {
+                if (_result == null)
+                {
+                    _result = new ResultRespository(_repoContext);
+                }
+                return _result;
+            }
+        }
+
+        public IUserRespository User
+        {
+            get
+            {
+                if (_user == null)
+                {
+                    _user = new UserRespository(_repoContext);
+                }
+                return _user;
+            }
+        }
+
+        public IParentRespository Parent
+        {
+            get
+            {
+                if (_parent == null)
+                {
+                    _parent = new ParentRespository(_repoContext);
+                }
+                return _parent;
             }
         }
 

@@ -17,6 +17,9 @@ using NLog;
 using System.IO;
 using Server.LoggerService;
 using Server.LoggerService.Imp;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
 
 namespace Server
 {
@@ -30,10 +33,29 @@ namespace Server
 
         public IConfiguration Configuration { get; }
 
+        readonly string MyAllowSpecificOrigins = "_myAllowSpecificOrigins";
+
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllers();
+
+            services.AddAuthentication(opt => {
+                opt.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                opt.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+            })
+            .AddJwtBearer(options =>
+            {
+            options.TokenValidationParameters = new TokenValidationParameters {
+            ValidateIssuer = true,
+            ValidateAudience = true,
+            ValidateLifetime = true,
+            ValidateIssuerSigningKey = true,
+            ValidIssuer = "http://localhost:5000",
+            ValidAudience = "http://localhost:5000",
+            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("superSecretKey@345"))
+            };
+            });
 
             services.AddDbContext<NCKH_DBContext>(options =>
             options.UseSqlServer(Configuration.GetConnectionString("DevConnection")));
@@ -53,14 +75,8 @@ namespace Server
             //Logger
             services.AddSingleton<ILoggerManager, LoggerManager>();
 
-            //CORS
-            services.AddCors(options =>
-            {
-                options.AddPolicy("CorsPolicy",
-                    builder => builder.AllowAnyOrigin()
-                    .AllowAnyMethod()
-                    .AllowAnyHeader());
-            });
+            //CoRs
+            services.AddCors();
 
             //LoopJson
             services.AddControllersWithViews()
@@ -73,6 +89,13 @@ namespace Server
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
+            app.UseCors(options =>
+           options.WithOrigins("http://localhost:3000")
+           .AllowAnyHeader()
+           .AllowAnyOrigin()
+           .AllowAnyMethod()
+           );
+           
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
@@ -80,12 +103,16 @@ namespace Server
 
             app.UseRouting();
 
+            app.UseAuthentication();
+
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
             });
+
+           
         }
     }
 }

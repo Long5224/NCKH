@@ -115,7 +115,7 @@ export default function Message() {
               </div>
             </form>
           </div>
-          <div className="col-5 px-0">
+          <div className="col-5 px-0 bg-white">
             <div className="bg-white">
               <div className="bg-gray px-4 py-2 bg-light">
                 <p className="h5 mb-0 py-1">Recent</p>

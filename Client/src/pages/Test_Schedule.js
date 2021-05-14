@@ -22,7 +22,7 @@ import {
   InputGroupAddon,
   InputGroupText,
   InputGroup,
-  Button,
+
 } from "reactstrap";
 
 function Test(props) {
@@ -42,15 +42,7 @@ function Test(props) {
               </CardHeader>
               <Form className="">
                 <div className="p-2 d-flex resFlex-column">
-                  <FormGroup className="mb-0">
-                    <Input type="select" name="select" id="exampleSelect" className="form-control-alternative">
-                      <option>1</option>
-                      <option>2</option>
-                      <option>3</option>
-                      <option>4</option>
-                      <option>5</option>
-                    </Input>
-                  </FormGroup>
+              
 
                   <FormGroup className="mb-0 ml-auto edit-form-group ">
                     <InputGroup className="">

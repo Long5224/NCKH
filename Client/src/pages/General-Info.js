@@ -1,6 +1,10 @@
-
-import React from "react";
-
+import React, { useState, useEffect } from "react";
+import LocalService from "../apis/local.service";
+import moment from "moment";
+import { PATH } from "../constansts/API";
+import { useForm } from "react-hook-form";
+import AuthService from "../apis/auth.service"
+import jwt_decode from "jwt-decode";
 // reactstrap components
 import {
   Button,
@@ -17,34 +21,102 @@ import {
 // core components
 import UserHeader from "../components/UserHeader/UserHeader";
 
-const index = () => {
+function Index() {
+  const [infoUser, setInfoUser] = useState({
+    id: null,
+    firstName: "",
+    lastName: "",
+    dateOfBirth: "",
+    placeOfBirth: "",
+    phoneNumber: "",
+    gender: null,
+    yearOfAdmission: "",
+    classID: null,
+    class: {
+      id: null,
+      name: "",
+      facultyId: null,
+      faculty: {
+        id: null,
+        name: "",
+      }
+    }
+  });
+  const currentUser = AuthService.getCurrentUser();
+  const { register, errors, handleSubmit } = useForm();
+  useEffect(() => {
+    async function getData() {
+      const id = currentUser.username.split('-')[1]
+      const role = currentUser.role
+      if(role === "student"){
+      const response = await LocalService.getById(
+        PATH.API_STUDENTS,
+        id
+      );
+      setInfoUser({...response.data})
+      console.log();
+      } else if (role === "teacher"){
+        const response = await LocalService.getById(
+          PATH.API_TEACHER,
+          id
+        );
+        setInfoUser({...response.data})
+      }
+      else {
+        const response = await LocalService.getById(
+          PATH.API_PARENT,
+          id
+        );
+        setInfoUser({...response.data.student})
+      }
+      
+    }
+    getData();
+  }, []);
+
+  const saveInfo = (data) => {
+   
+    const updateData = {
+      placeOfBirth: infoUser.placeOfBirth,
+      phoneNumber: infoUser.phoneNumber,
+    };
+    
+    LocalService.update(PATH.API_STUDENTS, infoUser.id, JSON.stringify(updateData))
+      .then(() => {
+        alert("File Updated Success");
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
+
+  function handleChange(event) {
+    const { name, value } = event.target;
+    setInfoUser({ ...infoUser, [name]: value });
+    console.log(infoUser);
+  }
   return (
     <>
-      <UserHeader />
+      <UserHeader data={infoUser} role={"student"} />
       {/* Page content */}
-      <Container className="mt--7" >
+      <Container className="mt--7">
         <Row>
           <Col className="order-xl-1" xl="12">
             <Card className="bg-secondary shadow">
-              <CardHeader className="bg-white border-0">
-                <Row className="align-items-center">
-                  <Col xs="8">
-                    <h3 className="mb-0">Thông tin chung</h3>
-                  </Col>
-                  <Col className="text-right" xs="4">
-                    <Button
-                      color="primary"
-                      href="#pablo"
-                      onClick={(e) => e.preventDefault()}
-                      size="sm"
-                    >
-                      Cập nhật
-                    </Button>
-                  </Col>
-                </Row>
-              </CardHeader>
-              <CardBody>
-                <Form>
+              <Form onSubmit={handleSubmit(saveInfo)}>
+                <CardHeader className="bg-white border-0">
+                  <Row className="align-items-center">
+                    <Col xs="8">
+                      <h3 className="mb-0">Thông tin chung</h3>
+                    </Col>
+                    <Col className="text-right" xs="4">
+                      <Button color="primary" size="sm" type="submit">
+                        Cập nhật
+                      </Button>
+                    </Col>
+                  </Row>
+                </CardHeader>
+                <CardBody>
                   <h6 className="heading-small text-muted mb-4">
                     Thông tin tài khoản
                   </h6>
@@ -63,6 +135,7 @@ const index = () => {
                             id="input-username"
                             placeholder="Username"
                             type="text"
+                            disabled
                           />
                         </FormGroup>
                       </Col>
@@ -74,12 +147,19 @@ const index = () => {
                           >
                             Số điện thoại
                           </label>
-                          <Input
-                            className="form-control-alternative"
+                          <input
+                            className="form-control-alternative form-control"
                             id="input-phone"
+                            name="phoneNumber"
                             placeholder="0123456789"
+                            value={infoUser.phoneNumber}
                             type="text"
+                            onChange={handleChange}
+                            ref={register({
+                              required: "This input is required.",
+                            })}
                           />
+                          {errors.phoneNumber && "Phone Number is required"}
                         </FormGroup>
                       </Col>
                     </Row>
@@ -96,7 +176,9 @@ const index = () => {
                             className="form-control-alternative"
                             id="input-first-name"
                             placeholder="First name"
+                            value={infoUser.firstName}
                             type="text"
+                            disabled
                           />
                         </FormGroup>
                       </Col>
@@ -112,7 +194,9 @@ const index = () => {
                             className="form-control-alternative"
                             id="input-last-name"
                             placeholder="Last name"
+                            value={infoUser.lastName}
                             type="text"
+                            disabled
                           />
                         </FormGroup>
                       </Col>
@@ -125,7 +209,24 @@ const index = () => {
                   </h6>
                   <div className="pl-lg-4">
                     <Row>
-                      <Col lg="6">
+                      <Col lg="4">
+                        <FormGroup>
+                          <label
+                            className="form-control-label"
+                            htmlFor="input-studentId"
+                          >
+                            Mã sinh viên
+                          </label>
+                          <Input
+                            className="form-control-alternative"
+                            id="input-studentId"
+                            value={infoUser.id}
+                            type="text"
+                            disabled
+                          />
+                        </FormGroup>
+                      </Col>
+                      <Col lg="4">
                         <FormGroup>
                           <label
                             className="form-control-label"
@@ -136,30 +237,35 @@ const index = () => {
                           <Input
                             className="form-control-alternative"
                             id="input-dateOfBirth"
+                            value={infoUser.dateOfBirth}
                             type="date"
+                            disabled
                           />
                         </FormGroup>
                       </Col>
-                      <Col lg="6">
+                      <Col lg="4">
                         <FormGroup>
                           <label
                             className="form-control-label"
-                            htmlFor="input-department"
+                            htmlFor="input-faculty"
                           >
                             Khóa
                           </label>
-                          <Input id="input-faculty" type="select">
-                            <option>61</option>
-                            <option>60</option>
-                            <option>59</option>
-                            <option>58</option>
-                            <option>57</option>
-                          </Input>
+                          <Input
+                            className="form-control-alternative"
+                            id="input-faculty"
+                            type="text"
+                            value={
+                              parseInt(infoUser.yearOfAdmission) -
+                              parseInt(moment("1959").get("year"))
+                            }
+                            disabled
+                          />
                         </FormGroup>
                       </Col>
                     </Row>
                     <Row>
-                      <Col lg="6">
+                      <Col lg="4">
                         <FormGroup>
                           <label
                             className="form-control-label"
@@ -167,16 +273,15 @@ const index = () => {
                           >
                             Khoa
                           </label>
-                          <Input id="input-faculty" type="select">
-                            <option>Công nghệ thông tin</option>
-                            <option>Kinh tế</option>
-                            <option>Cớ khí</option>
-                            <option>Điện/Điện tử</option>
-                            <option>Công trình</option>
-                          </Input>
+                          <Input
+                            id="input-gender"
+                            type="text"
+                            value={infoUser.class.faculty.name}
+                            disabled
+                          ></Input>
                         </FormGroup>
                       </Col>
-                      <Col lg="6">
+                      <Col lg="4">
                         <FormGroup>
                           <label
                             className="form-control-label"
@@ -184,13 +289,28 @@ const index = () => {
                           >
                             Lớp
                           </label>
-                          <Input id="input-faculty" type="select">
-                            <option>Công nghệ thông tin 1</option>
-                            <option>Công nghệ thông tin 2</option>
-                            <option>Công nghệ thông tin 3</option>
-                            <option>Công nghệ thông tin 4</option>
-                            <option>Công nghệ thông tin 5</option>
-                          </Input>
+                          <Input
+                            id="input-faculty"
+                            type="text"
+                            value={infoUser.class.name}
+                            disabled
+                          />
+                        </FormGroup>
+                      </Col>
+                      <Col lg="4">
+                        <FormGroup>
+                          <label
+                            className="form-control-label"
+                            htmlFor="input-gender"
+                          >
+                            Giới tính
+                          </label>
+                          <Input
+                            id="input-gender"
+                            type="text"
+                            value={infoUser.gender === true ? "Nam" : "Nữ"}
+                            disabled
+                          />
                         </FormGroup>
                       </Col>
                     </Row>
@@ -206,14 +326,18 @@ const index = () => {
                         <FormGroup>
                           <label
                             className="form-control-label"
-                            htmlFor="input-address"
+                            htmlFor="input-placeOfBirth"
                           >
                             Địa chỉ cụ thể
                           </label>
-                          <Input
-                            className="form-control-alternative"
-                            id="input-address"
+                          <input
+                            className="form-control-alternative form-control"
+                            id="input-placeOfBirth"
                             type="text"
+                            value={infoUser.placeOfBirth}
+                            name="placeOfBirth"
+                            onChange={handleChange}
+                            ref={register}
                           />
                         </FormGroup>
                       </Col>
@@ -231,7 +355,9 @@ const index = () => {
                             className="form-control-alternative"
                             id="input-city"
                             type="text"
-                          />
+                            value={infoUser.placeOfBirth.split("-")[0]}
+                            disabled
+                          ></Input>
                         </FormGroup>
                       </Col>
                       <Col lg="4">
@@ -246,6 +372,8 @@ const index = () => {
                             className="form-control-alternative"
                             id="input-district"
                             type="text"
+                            value={infoUser.placeOfBirth.split("-")[1]}
+                            disabled
                           />
                         </FormGroup>
                       </Col>
@@ -261,19 +389,21 @@ const index = () => {
                             className="form-control-alternative"
                             id="input-ward"
                             type="text"
+                            value={infoUser.placeOfBirth.split("-")[2]}
+                            disabled
                           />
                         </FormGroup>
                       </Col>
                     </Row>
                   </div>
-                </Form>
-              </CardBody>
+                </CardBody>
+              </Form>
             </Card>
           </Col>
         </Row>
       </Container>
     </>
   );
-};
+}
 
-export default index;
+export default Index;

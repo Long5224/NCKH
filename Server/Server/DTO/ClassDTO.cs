@@ -11,8 +11,9 @@ namespace Server.DTO
 
         public string name { get; set; }
 
-        public IEnumerable<StudentDTO> Students { get; set; }
+        public long facultyID { get; set; }
 
         public FacultyDTO Faculty { get; set; }
+
     }
 }

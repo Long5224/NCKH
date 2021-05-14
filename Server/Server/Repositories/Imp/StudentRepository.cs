@@ -19,6 +19,14 @@ namespace Server.Repositories.Imp
             _dataShaper = dataShaper;
         }
 
+        public Student GetStudentById(long studentId)
+        {
+            return FindByCondition(st => st.id.Equals(studentId))
+                .Include(st => st.Class)
+                .ThenInclude(cl => cl.Faculty)
+                .OrderBy(st => st.id)
+                .FirstOrDefault();
+        }
 
         public ShapedEntity GetStudentById(long classId, long studentId, string fields)
         {
@@ -36,6 +44,21 @@ namespace Server.Repositories.Imp
             return shapedStudents;
         }
 
-      
+        public IEnumerable<Student> GetStudentsByTeacherId(long teacherId)
+        {
+            return RespositoryContext.Student
+                .FromSqlRaw(@"select  student.id, student.firstName, student.lastName, student.dateOfBirth, 
+                            student.placeOfBirth, student.gender, student.phoneNumber, student.yearOfAdmission, student.classID
+                            from student
+                            inner join class on class.id = student.classID
+                            inner join teacher on teacher.Classid = class.id
+                            where teacher.id = {0}", teacherId)
+                .OrderBy(st => st.id);
+        }
+
+        public void UpdateSutdent(Student student)
+        {
+            Update(student);
+        }
     }
 }

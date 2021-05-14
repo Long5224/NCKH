@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.ComponentModel.DataAnnotations;
+using Server.Models.Entities;
 
 namespace Server.Models
 {
@@ -16,6 +17,8 @@ namespace Server.Models
         public string name { get; set; }
 
         public ICollection<Student> Students { get; set; }
+
+        public Teacher Teacher { get; set; }
 
         [ForeignKey("Faculty")]
         public long facultyID { get; set; }

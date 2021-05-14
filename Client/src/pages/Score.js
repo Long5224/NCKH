@@ -1,38 +1,143 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import Header from "../components/UserHeader/Header";
+import FilterDropDown from "../components/Filter/FilterDropDown/index";
+import Pagination from "../components/Pagination/index";
+import SearchFilter from "../components/Filter/Search/index";
+import { PATH } from "../constansts/API";
+import LocalService from "../apis/local.service";
+import AuthService from "../apis/auth.service"
 // reactstrap components
 import {
   Card,
   CardHeader,
   CardFooter,
-  DropdownMenu,
-  DropdownItem,
-  UncontrolledDropdown,
-  DropdownToggle,
   Media,
-  Pagination,
-  PaginationItem,
-  PaginationLink,
   Table,
   Container,
   Row,
   Form,
   FormGroup,
-  Input,
-  InputGroupAddon,
-  InputGroupText,
-  InputGroup,
 } from "reactstrap";
 // core components
 
-const Tables = () => {
+const Score = () => {
+  const dataPerPage = 2;
+  const [pagesVisited, setPagesVisited] = useState(0);
+  const [pageCount, setPageCount] = useState(1);
+  const [formValues, setFormValues] = useState({
+    search: "",
+    select: "",
+  });
+  const [infoUser, setInfoUser] = useState({
+    id: null,
+    firstName: "",
+    lastName: "",
+    dateOfBirth: "",
+    placeOfBirth: "",
+    phoneNumber: "",
+    gender: null,
+    yearOfAdmission: "",
+    classID: null,
+    class: {
+      id: null,
+      name: "",
+      facultyId: null,
+      faculty: {
+        id: null,
+        name: "",
+      }
+    }
+  });
+  const [scores, setScores] = useState([]);
+  const [currentSemesterId, setCurrentSemesterId] = useState("");
+  useEffect(() => {
+    async function getData() {
+      const id = AuthService.getCurrentUser().username.split('-')[1]
+      const responseScore = await LocalService.getChildrenById(
+        PATH.API_STUDENTS,
+        id,
+        PATH.API_SCORE
+      );
+      const response = await LocalService.getById(
+        PATH.API_STUDENTS,
+        id
+      );
+      setInfoUser({...response.data.student})
+      setScores(responseScore.data);
+      setPageCount(Math.ceil(responseScore.data.length / dataPerPage));
+    }
+    getData();
+  }, []);
+
+  function handleOnChange(val) {
+    setFormValues({...formValues,[val.name]: val.value})
+    setPagesVisited(0);
+    if (val.name == "select") {
+      if (val.value === "all") {
+        setPageCount(scores.length / dataPerPage)
+        setCurrentSemesterId("")
+        return;
+      } else {
+        setCurrentSemesterId(val.value);
+        const count = scores.filter((values) => {
+          if (values.studyTime.course.semester.id == val.value) {
+            return val;
+          }
+        }).length;
+        setPageCount(Math.ceil(count / dataPerPage));
+      }
+    }
+  }
+
+  const displayData = scores
+    .filter((val) => {
+      if (val.studyTime.course.semester.id == currentSemesterId) {
+        return val;
+      }
+      else if(currentSemesterId === ""){
+        return val;
+      }
+    })
+    .filter((val) => {
+      if (formValues.search === "") {
+        return val;
+      } else if (
+        val.studyTime.course.name
+          .toLowerCase()
+          .includes(formValues.search.toLowerCase())
+      ) {
+        return val;
+      }
+    })
+    .slice(pagesVisited, pagesVisited + dataPerPage)
+    .map((data, key) => {
+      return (
+        <tr key={key}>
+          <th scope="row">
+            <Media>
+              <span className="mb-0 text-sm">{data.studyTime.course.name}</span>
+            </Media>
+          </th>
+          <td>{data.mark_process}</td>
+          <td>{data.mark_exam}</td>
+          <td>{data.mark_exam}</td>
+          <td>{data.evaluation}</td>
+        </tr>
+      );
+    });
+
+  function handlePageChange(selected) {
+    const currentPage = selected;
+    const offset = currentPage * dataPerPage;
+    setPagesVisited(offset);
+  }
   return (
     <>
       {/*Header */}
       <Header />
 
       {/* Page content */}
-      <Container className="mt--8" >
+      <Container className="mt--8">
         {/* Table */}
         <Row>
           <div className="col">
@@ -42,15 +147,17 @@ const Tables = () => {
               </CardHeader>
               <Form className="">
                 <div className="p-2 d-flex resFlex-column">
-                  <FormGroup className="mb-0 ml-auto edit-form-group ">
-                    <InputGroup className="">
-                      <InputGroupAddon addonType="prepend">
-                        <InputGroupText>
-                          <i className="ni ni-zoom-split-in" />
-                        </InputGroupText>
-                      </InputGroupAddon>
-                      <Input placeholder="Search" type="text" />
-                    </InputGroup>
+                  <FormGroup className="mb-0">
+                    <FilterDropDown
+                      dataFilter={infoUser.yearOfAdmission}
+                      onChange={handleOnChange}
+                      role="student"
+                      currentSelected={currentSemesterId}
+                    />
+                  </FormGroup>
+
+                  <FormGroup className=" mb-0 ml-auto edit-form-group">
+                    <SearchFilter onChange={handleOnChange} />
                   </FormGroup>
                 </div>
                 <Table className="align-items-center table-flush " responsive>
@@ -69,117 +176,24 @@ const Tables = () => {
                         Điểm tổng kết <i className="fas fa-sort"></i>
                       </th>
                       <th scope="col">
+                        Đánh giá <i className="fas fa-sort"></i>
+                      </th>
+                      <th scope="col">
                         Lần thi <i className="fas fa-sort"></i>
                       </th>
                       <th scope="col" />
                     </tr>
                   </thead>
-                  <tbody>
-                    <tr>
-                      <th scope="row">
-                        <Media>
-                          <span className="mb-0 text-sm">
-                            Những nguyên lý cơ bản của chủ nghĩa MLN F2
-                          </span>
-                        </Media>
-                      </th>
-                      <td>10</td>
-
-                      <td>10</td>
-
-                      <td>10</td>
-
-                      <td>1</td>
-
-                      <td className="text-right">
-                        <UncontrolledDropdown>
-                          <DropdownToggle
-                            className="btn-icon-only text-light"
-                            href="#pablo"
-                            role="button"
-                            size="sm"
-                            color=""
-                            onClick={(e) => e.preventDefault()}
-                          >
-                            <i className="fas fa-ellipsis-v" />
-                          </DropdownToggle>
-                          <DropdownMenu className="dropdown-menu-arrow" right>
-                            <DropdownItem
-                              href="#pablo"
-                              onClick={(e) => e.preventDefault()}
-                            >
-                              Action
-                            </DropdownItem>
-                            <DropdownItem
-                              href="#pablo"
-                              onClick={(e) => e.preventDefault()}
-                            >
-                              Another action
-                            </DropdownItem>
-                            <DropdownItem
-                              href="#pablo"
-                              onClick={(e) => e.preventDefault()}
-                            >
-                              Something else here
-                            </DropdownItem>
-                          </DropdownMenu>
-                        </UncontrolledDropdown>
-                      </td>
-                    </tr>
-                  </tbody>
+                  <tbody>{displayData}</tbody>
                 </Table>
               </Form>
 
               <CardFooter className="py-4">
                 <nav aria-label="...">
                   <Pagination
-                    className="pagination justify-content-end mb-0"
-                    listClassName="justify-content-end mb-0"
-                  >
-                    <PaginationItem className="disabled">
-                      <PaginationLink
-                        href="#pablo"
-                        onClick={(e) => e.preventDefault()}
-                        tabIndex="-1"
-                      >
-                        <i className="fas fa-angle-left" />
-                        <span className="sr-only">Previous</span>
-                      </PaginationLink>
-                    </PaginationItem>
-                    <PaginationItem className="active">
-                      <PaginationLink
-                        href="#pablo"
-                        onClick={(e) => e.preventDefault()}
-                      >
-                        1
-                      </PaginationLink>
-                    </PaginationItem>
-                    <PaginationItem>
-                      <PaginationLink
-                        href="#pablo"
-                        onClick={(e) => e.preventDefault()}
-                      >
-                        2 <span className="sr-only">(current)</span>
-                      </PaginationLink>
-                    </PaginationItem>
-                    <PaginationItem>
-                      <PaginationLink
-                        href="#pablo"
-                        onClick={(e) => e.preventDefault()}
-                      >
-                        3
-                      </PaginationLink>
-                    </PaginationItem>
-                    <PaginationItem>
-                      <PaginationLink
-                        href="#pablo"
-                        onClick={(e) => e.preventDefault()}
-                      >
-                        <i className="fas fa-angle-right" />
-                        <span className="sr-only">Next</span>
-                      </PaginationLink>
-                    </PaginationItem>
-                  </Pagination>
+                    pageCount={pageCount}
+                    onPageChange={handlePageChange}
+                  />
                 </nav>
               </CardFooter>
             </Card>
@@ -190,4 +204,4 @@ const Tables = () => {
   );
 };
 
-export default Tables;
+export default Score;

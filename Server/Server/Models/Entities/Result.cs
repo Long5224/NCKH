@@ -1,24 +1,32 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Threading.Tasks;
 
 namespace Server.Models.Entities
 {
+    [Table("result")]
     public class Result
     {
-        public long id { get; set; }
+      
+        [Column(TypeName = "float")]
+        public float mark_process { get; set; }
 
-        public float score_progress { get; set; }
+        [Column(TypeName = "float")]
+        public float mark_exam { get; set; }
 
-        public float score_exam { get; set; }
-
+        [Column(TypeName = "nvarchar(100)")]
         public string evaluation { get; set; }
 
-        public int result_times { get; set; }
+        public long Studytimeid { get; set; }
 
-        public long studentId { get; set; }
+        public StudyTime StudyTime { get; set; }
+
+        public long Studentid { get; set; }
 
         public Student Student { get; set; }
+
     }
 }

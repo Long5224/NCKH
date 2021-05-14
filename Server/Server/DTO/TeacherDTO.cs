@@ -1,0 +1,32 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+
+namespace Server.DTO
+{
+    public class TeacherDTO
+    {
+        public long id { get; set; }
+
+        public string firstName { get; set; }
+
+        public string lastName { get; set; }
+
+
+        public string dateOfBirth { get; set; }
+
+
+        public string placeOfBirth { get; set; }
+
+        public string phoneNumber { get; set; }
+
+        public bool gender { get; set; }
+
+        public string yearOfAdmission { get; set; }
+
+        public long classID { get; set; }
+
+        public ClassDTO Class { get; set; }
+    }
+}

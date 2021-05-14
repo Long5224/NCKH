@@ -14,9 +14,6 @@ namespace Server.Models.Entities
         public long id { get; set; }
 
         [Column(TypeName = "nvarchar(100)")]
-        public string name { get; set; }
-
-        [Column(TypeName = "nvarchar(100)")]
         public string begin_year { get; set; }
 
         [Column(TypeName = "nvarchar(100)")]

@@ -13,6 +13,14 @@ namespace Server.Models
         {
 
         }
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<Evaluation>()
+                .HasKey(el => new { el.Studentid, el.Semesterid});
+
+            modelBuilder.Entity<Result>()
+                .HasKey(rs => new { rs.Studentid, rs.Studytimeid });
+        }
         public DbSet<Student> Student { get; set; }
 
         public DbSet<Faculty> Faculty { get; set; }
@@ -24,5 +32,19 @@ namespace Server.Models
         public DbSet<CourseClass> CourseClass { get; set; }
 
         public DbSet<Semester> Semester { get; set; }
+
+        public DbSet<StudyTime> StudyTimes { get; set; }
+
+        public DbSet<Result> Results { get; set; }
+
+        public DbSet<Teacher> Teachers { get; set; }
+
+        public DbSet<Evaluation> Evaluations { get; set; }
+
+        public DbSet<User> Users { get; set; }
+
+        public DbSet<Role> Roles { get; set; }
+
+        public DbSet<Parent> Parents { get; set; }
     }
 }

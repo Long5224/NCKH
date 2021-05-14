@@ -9,31 +9,31 @@ namespace Server.Repositories.Imp
 {
     public abstract class RespositoryBase<T> : IRepositoryBase<T> where T : class
     {
-        protected NCKH_DBContext RepositoryContext { get; set; }
+        protected NCKH_DBContext RespositoryContext { get; set; }
         public RespositoryBase(NCKH_DBContext repositoryContext)
         {
-            this.RepositoryContext = repositoryContext;
+            this.RespositoryContext = repositoryContext;
         }
         public IQueryable<T> FindAll()
         {
-            return this.RepositoryContext.Set<T>().AsNoTracking();
+            return this.RespositoryContext.Set<T>().AsNoTracking();
         }
         public IQueryable<T> FindByCondition(Expression<Func<T, bool>> expression)
         {
-            return this.RepositoryContext.Set<T>().Where(expression).AsNoTracking();
+            return this.RespositoryContext.Set<T>().Where(expression).AsNoTracking();
         }
     
         public void Create(T entity)
         {
-            this.RepositoryContext.Set<T>().Add(entity);
+            this.RespositoryContext.Set<T>().Add(entity);
         }
         public void Update(T entity)
         {
-            this.RepositoryContext.Set<T>().Update(entity);
+            this.RespositoryContext.Set<T>().Update(entity);
         }
         public void Delete(T entity)
         {
-            this.RepositoryContext.Set<T>().Remove(entity);
+            this.RespositoryContext.Set<T>().Remove(entity);
         }
     }
 }

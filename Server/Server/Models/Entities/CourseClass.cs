@@ -17,14 +17,17 @@ namespace Server.Models.Entities
         public string name { get; set; }
 
         [Column(TypeName = "nvarchar(100)")]
-        public string time { get; set; }
+        public string begin_time { get; set; }
+
+        [Column(TypeName = "nvarchar(100)")]
+        public string end_time { get; set; }
 
         [Column(TypeName = "nvarchar(100)")]
         public string location { get; set; }
 
         [ForeignKey("Courseid")]
-        public long Courseid { get; set; }
+        public long Studytimeid { get; set; }
 
-        public Course Course { get; set; }
+        public StudyTime StudyTimes { get; set; }
     }
 }

@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.ComponentModel.DataAnnotations;
 using Server.Models;
+using Server.Models.Entities;
 
 namespace Server.Models
 {
@@ -36,7 +37,7 @@ namespace Server.Models
 
         [ForeignKey("Class")]
         public long classID { get; set; }
-
         public Class Class { get; set; }
+
     }
 }

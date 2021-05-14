@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using AutoMapper;
 using Server.Models;
 using Server.Models;
 namespace Server.DTO
@@ -17,6 +18,8 @@ namespace Server.DTO
         public string phoneNumber { get; set; }
         public bool gender { get; set; }
         public string yearOfAdmission { get; set; }
-        
+        public long classID { get; set; }
+        public ClassDTO Class { get; set; } 
+
     }
 }

@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { NavLink as NavLinkRRD, Link } from "react-router-dom";
 // nodejs library to set properties for components
 import { PropTypes } from "prop-types";
-
+import AuthService from "../../apis/auth.service"
 // reactstrap components
 import {
   Collapse,
@@ -71,6 +71,10 @@ const Sidebar = (props) => {
     });
   };
 
+  function handleLogout() {
+    AuthService.logout()
+  }
+
   const { routes, logo } = props;
   let navbarBrandProps;
   if (logo && logo.innerLink) {
@@ -91,11 +95,6 @@ const Sidebar = (props) => {
       expand="md"
       id="sidenav-main"
     >
-      <div className="custom-menu">
-        <button type="button" className="btn btn-primary" id="sidebarCollapse">
-          <i className="fa fa-bars"></i>
-        </button>
-      </div>
       <Container fluid>
         {/* Toggler */}
         <button
@@ -107,13 +106,15 @@ const Sidebar = (props) => {
         </button>
         {/* Brand */}
         {logo ? (
-          <NavbarBrand className="pt-0" {...navbarBrandProps}>
-            <img
-              alt={logo.imgAlt}
-              className="navbar-brand-img"
-              src={logo.imgSrc}
-            />
-          </NavbarBrand>
+          <div className="d-flex flex-row">
+            <NavbarBrand className="pt-0" {...navbarBrandProps}>
+              <img
+                alt={logo.imgAlt}
+                className="navbar-brand-img"
+                src={logo.imgSrc}
+              />
+            </NavbarBrand>
+          </div>
         ) : null}
 
         {/* User */}
@@ -208,7 +209,20 @@ const Sidebar = (props) => {
             </InputGroup>
           </Form>
           {/* Navigation */}
-          <Nav navbar>{createLinks(routes)}</Nav>
+          <Nav navbar>
+            {createLinks(routes)}
+            <NavItem >
+              <NavLink
+                to="/login"
+                tag={NavLinkRRD}
+                onClick={handleLogout}
+                activeClassName="active"
+              >
+                <i className="fas fa-sign-out-alt text-primary" />
+                Đăng xuất
+              </NavLink>
+            </NavItem>
+          </Nav>
 
           {/* Navigation */}
         </Collapse>

@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Routing;
 using Server.LoggerService;
 using Server.Models;
@@ -12,6 +13,7 @@ namespace Server.Controllers
 {
     [Route("api/faculties")]
     [ApiController]
+    [Authorize(Roles = "student, parents    , teacher")]
     public class FacultyController : Controller
     {
         private IRepositoryWrapper _repository;

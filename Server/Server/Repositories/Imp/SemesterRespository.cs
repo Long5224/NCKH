@@ -1,10 +1,12 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Server.Models;
 using Server.Models.Entities;
+using Server.Models.Parameters;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Server.Helper;
 
 namespace Server.Repositories.Imp
 {
@@ -15,16 +17,7 @@ namespace Server.Repositories.Imp
         {
         }
 
-        public IEnumerable<Semester> GetAllSemester()
-        {
-            var semesters = FindAll().Include(se => se.Courses).ThenInclude(cr => cr.CourseClasses).ToList();
 
-            return semesters;
-        }
-
-        public Semester GetSemesterByName(string name)
-        {
-            return FindByCondition(se => se.name.Equals(name)).FirstOrDefault();
-        }
+      
     }
 }

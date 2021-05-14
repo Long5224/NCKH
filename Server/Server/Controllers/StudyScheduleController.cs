@@ -1,6 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Routing;
+using Newtonsoft.Json;
 using Server.LoggerService;
+using Server.Models.Parameters;
 using Server.Repositories.Imp;
 using System;
 using System.Collections.Generic;
@@ -11,7 +13,7 @@ using System.Threading.Tasks;
 
 namespace Server.Controllers
 {
-    [Route("api/semesters")]
+    [Route("api/study-schedule")]
     [ApiController]
     public class StudyScheduleController : ControllerBase
     {
@@ -25,47 +27,21 @@ namespace Server.Controllers
             _linkGenerator = linkGenerator;
             _logger = logger;
         }
-        // GET: api/<StudyScheduleController>
+
+
         [HttpGet]
-        public IActionResult GetAllSemesters()
+        public IActionResult GetCourseClasses()
         {
-            try
+            var courseClasses = _repository.CourseClass.GetCourseClasses();
+
+           if(courseClasses == null)
             {
-                var semesters = _repository.Semester.GetAllSemester();
-                _logger.LogInfo($"Returned all semester from database.");
-               
-                return Ok(semesters);
+                return NotFound();
             }
-            catch (Exception ex)
-            {
-                _logger.LogError($"Something went wrong inside GetAllSemester action: {ex.Message}");
-                return StatusCode(500, "Internal server error");
-            }
+
+            return Ok(courseClasses);
         }
 
-        // GET api/<StudyScheduleController>/5
-        [HttpGet("{name}")]
-        public string GetSemesterByName(string name)
-        {
-            return "value";
-        }
-
-        // POST api/<StudyScheduleController>
-        [HttpPost]
-        public void Post([FromBody] string value)
-        {
-        }
-
-        // PUT api/<StudyScheduleController>/5
-        [HttpPut("{id}")]
-        public void Put(int id, [FromBody] string value)
-        {
-        }
-
-        // DELETE api/<StudyScheduleController>/5
-        [HttpDelete("{id}")]
-        public void Delete(int id)
-        {
-        }
+  
     }
 }

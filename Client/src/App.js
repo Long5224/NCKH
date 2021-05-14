@@ -1,15 +1,14 @@
 import React from "react";
 import { BrowserRouter, Route, Switch, Redirect } from "react-router-dom";
-
-import HomePage from './layout/HomeLayout'
-import LoginPage from './layout/LoginLayout'
+import { PrivateRoute } from "./components/PrivateRoute/index";
+import HomePage from "./layout/HomeLayout";
+import LoginPage from "./layout/LoginLayout";
 function App() {
   return (
     <BrowserRouter>
       <Switch>
-        <Route path="/home" render={(props) => <HomePage {...props} />} />
         <Route path="/login" render={(props) => <LoginPage {...props} />} />
-        <Redirect from="/" to="/home/index" />
+        <PrivateRoute path="/" component={HomePage} />
       </Switch>
     </BrowserRouter>
   );
