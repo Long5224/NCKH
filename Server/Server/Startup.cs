@@ -20,6 +20,7 @@ using Server.LoggerService.Imp;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
+using Server.Hubs;
 
 namespace Server
 {
@@ -82,7 +83,13 @@ namespace Server
             services.AddControllersWithViews()
             .AddNewtonsoftJson(options =>
             options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore
-);
+            );
+
+            //SignalR
+            services.AddSignalR(o =>
+            {
+                o.EnableDetailedErrors = true;
+            });
 
         }
 
@@ -110,6 +117,8 @@ namespace Server
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
+
+                endpoints.MapHub<NotificationHub>("/Hubs/notification");
             });
 
            

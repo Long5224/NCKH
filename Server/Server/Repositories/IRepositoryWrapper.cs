@@ -27,6 +27,8 @@ namespace Server.Repositories.Imp
         IUserRespository User { get; }
 
         IParentRespository Parent { get; }
+
+        INotificationRepository Notification { get; }
         void Save();
     }
 }

@@ -21,9 +21,11 @@ namespace Server.Repositories.Imp
         private IEvaluationRespository _evaluation;
         private IResultRespository _result;
         private ICourseClassRespository _courseClass;
+        private INotificationRepository _notificationPost;
         private IDataShaper<Student> _studentDataShaper;
         private IDataShaper<Class> _classDataShaper;
         private IDataShaper<Faculty> _facultyDataShaper;
+        
        
         public RepositoryWrapper(NCKH_DBContext repositoryContext, IDataShaper<Student> studentDataShaper, IDataShaper<Class> classDataShaper
             ,IDataShaper<Faculty> facultyDataShaper)
@@ -150,6 +152,18 @@ namespace Server.Repositories.Imp
                     _parent = new ParentRespository(_repoContext);
                 }
                 return _parent;
+            }
+        }
+
+        public INotificationRepository Notification
+        {
+            get
+            {
+                if (_notificationPost == null)
+                {
+                    _notificationPost = new NotificationRepository(_repoContext);
+                }
+                return _notificationPost;
             }
         }
 

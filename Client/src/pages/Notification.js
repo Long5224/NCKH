@@ -2,6 +2,7 @@ import React from "react";
 import Header from "../components/UserHeader/Header";
 import { Link, Switch, useRouteMatch, Route } from "react-router-dom";
 import AddNotification from "./AddNotification"
+import * as signalR from "@microsoft/signalr";
 // reactstrap components
 import {
   Card,
@@ -23,6 +24,20 @@ import {
   InputGroupText,
 } from "reactstrap";
 function Notification(props) {
+  const connection = new signalR.HubConnectionBuilder()
+        .withUrl("http://localhost:5000/Hubs/notification/",{
+          skipNegotiation: true,
+          transport: signalR.HttpTransportType.WebSockets
+        })
+        .configureLogging(signalR.LogLevel.Information)
+        .build();
+        connection.start().then(() => {
+          connection.on("sendToReact", (message) => {
+            console.log(message)
+          });
+        })
+        .catch((error) => console.log(error));;
+        
   let { path, url } = useRouteMatch();
   return (
     <>
@@ -62,8 +77,8 @@ function Notification(props) {
                       </div>
                     </Form>
                     <hr className="m-0" />
-                    <ListGroup className="list-group-flush list ">
-                      <ListGroupItem
+                    <ListGroup id="notificationList" className="list-group-flush list ">
+                      <ListGroupItem id="testNotification"
                         className=" list-group-item-action px-0"
                         href="#pablo"
                         onClick={(e) => e.preventDefault()}
@@ -71,30 +86,7 @@ function Notification(props) {
                       >
                         Dapibus ac facilisis in
                       </ListGroupItem>
-                      <ListGroupItem
-                        className=" list-group-item-action px-0"
-                        href="#pablo"
-                        onClick={(e) => e.preventDefault()}
-                        tag="a"
-                      >
-                        Morbi leo risus
-                      </ListGroupItem>
-                      <ListGroupItem
-                        className=" list-group-item-action px-0"
-                        href="#pablo"
-                        onClick={(e) => e.preventDefault()}
-                        tag="a"
-                      >
-                        Porta ac consectetur ac
-                      </ListGroupItem>
-                      <ListGroupItem
-                        className=" list-group-item-action px-0"
-                        href="#pablo"
-                        onClick={(e) => e.preventDefault()}
-                        tag="a"
-                      >
-                        Vestibulum at eros
-                      </ListGroupItem>
+                      
                     </ListGroup>
                   </CardBody>
 

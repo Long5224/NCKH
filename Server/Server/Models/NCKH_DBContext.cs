@@ -46,5 +46,7 @@ namespace Server.Models
         public DbSet<Role> Roles { get; set; }
 
         public DbSet<Parent> Parents { get; set; }
+
+        public DbSet<NotificationPost> NotificationPosts { get; set; }
     }
 }
