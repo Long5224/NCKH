@@ -26,6 +26,7 @@ namespace Server.Repositories.Imp
         public void Create(T entity)
         {
             this.RespositoryContext.Set<T>().Add(entity);
+            this.RespositoryContext.SaveChanges();
         }
         public void Update(T entity)
         {
