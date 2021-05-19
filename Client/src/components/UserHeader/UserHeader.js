@@ -4,6 +4,7 @@ import { PATH } from "../../constansts/API";
 import LocalService from "../../apis/local.service";
 import { useForm } from "react-hook-form";
 import FilterDropDown from "../Filter/FilterDropDown/index";
+import AuthService from "../../apis/auth.service"
 // reactstrap components
 import {
   Button,
@@ -16,10 +17,14 @@ import {
   Form,
   UncontrolledAlert,
   Input,
+  Spinner
 } from "reactstrap";
 
 const UserHeader = (props) => {
-  const { data, role } = props;
+  const { data, page } = props;
+  const currentUser = AuthService.getCurrentUser();
+  const id = currentUser.username.split('-')[1]
+  const role = currentUser.role
   const [isSeeMore, setIsSeeMore] = useState(false);
   const [evaluations, setEvaluations] = useState([]);
   const [currentEvaluation, setCurrentEvaluation] = useState({
@@ -35,9 +40,9 @@ const UserHeader = (props) => {
     content: "",
   });
   const [isUpdate, setIsUpdate] = useState(false);
-  const [isUpdated, setIsUpdated] = useState(false);
   const { register, errors, handleSubmit } = useForm();
   const [currentSelected, setCurrentSelected] = useState("");
+  const [tempData, setTempData] = useState({});
   useEffect(() => {
     async function getData() {
       const responseEvaluation = await LocalService.getChildrenById(
@@ -49,9 +54,11 @@ const UserHeader = (props) => {
       console.log(responseEvaluation);
       setCurrentEvaluation(responseEvaluation.data[0]);
       setCurrentSelected(responseEvaluation.data[0].semesterid);
+      setIsUpdate(false);
+      setTempData(data);
     }
     getData();
-  }, []);
+  }, [data, isUpdate]);
 
   function handleOnChange(receiveValues) {
     const currentEvl = evaluations.filter((val) => {
@@ -60,7 +67,7 @@ const UserHeader = (props) => {
       }
     });
     setCurrentEvaluation({ ...currentEvl[0] });
-    setCurrentSelected(receiveValues.semesterid)
+    setCurrentSelected(receiveValues.semesterid);
   }
 
   function handleChangeTextArea(event) {
@@ -82,7 +89,7 @@ const UserHeader = (props) => {
     )
       .then(() => {
         setIsUpdate(true);
-        setIsUpdated(true);
+        alert("Update Success")
       })
       .catch((error) => {
         setIsUpdate(false);
@@ -165,7 +172,7 @@ const UserHeader = (props) => {
                           <i className="ni location_pin mr-2" />
                           {data.phoneNumber}
                         </div>
-                        {role === "user" || role === "student" ? (
+                        {(role === "parent" || role === "student") && page == "general" ? (
                           <div className="h5 ">
                             <i className="ni business_briefcase-24 mr-2" />
                             {"Khoa " +
@@ -178,50 +185,22 @@ const UserHeader = (props) => {
                         )}
 
                         <hr className="my-4" />
-                        {(role === "student" || role === "teacher") &&
+                        {(role === "parent" || role === "teacher") &&
                         isSeeMore === true ? (
                           <Card className="shadow mb-3">
                             <CardHeader className="border-0 d-flex">
                               <h3 className="mb-0 mt-2">Đánh giá học kì</h3>
                               <Form className="ml-auto">
                                 <FilterDropDown
-                                  dataFilter={data.yearOfAdmission}
                                   currentSelected={currentEvaluation.semesterid}
                                   onChange={handleOnChange}
+                                  page=""
                                 />
                               </Form>
                             </CardHeader>
                             <hr className="my-4" />
                             <CardBody>
-                              {isUpdated === true ? (
-                                isUpdate === true ? (
-                                  <UncontrolledAlert
-                                    color="success"
-                                    fade={false}
-                                  >
-                                    <span className="alert-inner--icon">
-                                      <i className="ni ni-like-2" />
-                                    </span>{" "}
-                                    <span className="alert-inner--text">
-                                      <strong>Success!</strong> Update Success
-                                    </span>
-                                  </UncontrolledAlert>
-                                ) : (
-                                  <UncontrolledAlert
-                                    color="danger"
-                                    fade={false}
-                                  >
-                                    <span className="alert-inner--icon">
-                                      <i class="fas fa-exclamation-triangle"></i>
-                                    </span>{" "}
-                                    <span className="alert-inner--text">
-                                      <strong>Error!</strong> Update Not Success
-                                    </span>
-                                  </UncontrolledAlert>
-                                )
-                              ) : (
-                                ""
-                              )}
+                             
 
                               <Form
                                 className="mt-4"
@@ -242,7 +221,8 @@ const UserHeader = (props) => {
                                       placeholder="Required example textarea"
                                       value={currentEvaluation.content}
                                       onChange={handleChangeTextArea}
-                                      ref={register}
+                                      {...register("content", { required: true })}
+                                      disabled={role === "parent" ? true : false}
                                     ></textarea>
                                   </div>
                                 </div>
@@ -250,7 +230,7 @@ const UserHeader = (props) => {
                                 <button
                                   type="submit"
                                   class="btn btn-primary"
-                                  disabled={role === "student" ? true : false}
+                                  disabled={role === "parent" ? true : false}
                                 >
                                   Submit
                                 </button>
@@ -261,25 +241,28 @@ const UserHeader = (props) => {
                           ""
                         )}
 
-                        {(role === "student" || role === "teacher") &&
-                        isSeeMore === true ? (
-                          <span
-                            className="seeMore"
-                            onClick={() => {
-                              setIsSeeMore(!isSeeMore);
-                            }}
-                          >
-                            Thu gọn
-                          </span>
+                        {role == "parent" && (page == "general") || (role == "teacher" && page == "student") ? (
+                          isSeeMore == true ? (
+                            <span
+                              className="seeMore"
+                              onClick={() => {
+                                setIsSeeMore(!isSeeMore);
+                              }}
+                            >
+                              Thu gọn
+                            </span>
+                          ) : (
+                            <span
+                              className="seeMore"
+                              onClick={() => {
+                                setIsSeeMore(!isSeeMore);
+                              }}
+                            >
+                              Xem thêm
+                            </span>
+                          )
                         ) : (
-                          <span
-                            className="seeMore"
-                            onClick={() => {
-                              setIsSeeMore(!isSeeMore);
-                            }}
-                          >
-                            Xem thêm
-                          </span>
+                          ""
                         )}
                       </div>
                     </div>

@@ -23,13 +23,7 @@ namespace Server
 
             CreateMap<Evaluation, EvaluationDTO>();
 
-            CreateMap<Result, ResultDTO>();
-
             CreateMap<Course, CourseDTO>();
-
-            CreateMap<Semester, SemesterDTO>();
-
-            CreateMap<StudyTime, StudyTimeDTO>();
 
             CreateMap<Teacher, TeacherDTO>();
         }

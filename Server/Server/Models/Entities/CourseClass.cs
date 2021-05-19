@@ -16,15 +16,6 @@ namespace Server.Models.Entities
         [Column(TypeName = "nvarchar(100)")]
         public string name { get; set; }
 
-        [Column(TypeName = "nvarchar(100)")]
-        public string begin_time { get; set; }
-
-        [Column(TypeName = "nvarchar(100)")]
-        public string end_time { get; set; }
-
-        [Column(TypeName = "nvarchar(100)")]
-        public string location { get; set; }
-
         [ForeignKey("Courseid")]
         public long Studytimeid { get; set; }
 

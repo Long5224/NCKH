@@ -64,7 +64,7 @@ function HomeLayout(props) {
         <Navbar {...props} brandText={getBrandText(props.location.pathname)} />
         <Switch>
           {getRoutes(routes)}
-          <Redirect exact from="/home" to="/home/index" />
+          <Redirect exact from="/" to="/home/index" />
         </Switch>
         {/*Footer */}
         <Container>

@@ -19,6 +19,9 @@ namespace Server.Models.Entities
         [Column(TypeName = "nvarchar(100)")]
         public string end_year { get; set; }
 
+        public int times { get; set; }
+
         public ICollection<Course> Courses { get; set; }
+
     }
 }

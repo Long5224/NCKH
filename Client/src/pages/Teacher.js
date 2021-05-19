@@ -17,7 +17,7 @@ const Teacher = (props) => {
   })
   useEffect(() => {
     async function getData() {
-      const response = await Local.getChildrenById(PATH.API_STUDENTS, "2", PATH.API_TEACHER);
+      const response = await Local.getChildrenById(PATH.API_STUDENTS, "1", PATH.API_TEACHER);
       console.log(response);
       setInfoTeacher(response.data[0])
     }
@@ -25,7 +25,7 @@ const Teacher = (props) => {
   }, []);
   return (
     <>
-      <UserHeader data={infoTeacher} role={"teacher"}/>
+      <UserHeader data={infoTeacher} page="teacher"/>
     </>
   );
 };

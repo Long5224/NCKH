@@ -8,8 +8,19 @@ namespace Server.DTO
 {
     public class StudyTimeDTO
     {
-        public long id { get; set; }
+        public long semesterId {get; set; }
 
-        public CourseDTO Course { get; set; }
+        public string course { get; set; }
+
+        public ResultDTO results { get; set; }
+
+        public int times { get; set; }
+
+        public StudyTimeDTO(long semesterId, string course, ResultDTO results)
+        {
+            this.semesterId = semesterId;
+            this.course = course;
+            this.results = results;
+        }
     }
 }

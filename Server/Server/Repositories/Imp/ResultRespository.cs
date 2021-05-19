@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Server.DTO;
 using Server.Helper;
 using Server.Models;
 using Server.Models.Entities;
@@ -16,13 +17,9 @@ namespace Server.Repositories.Imp
         {
         }
 
-        public IEnumerable<Result> GetResultOfSemesterByStudentId(long studentId)
+        public IEnumerable<StudyTimeDTO> GetResultOfSemesterByStudentId(long studentId)
         {
-            return FindByCondition(rs => rs.Studentid.Equals(studentId))
-                .Include(rs => rs.StudyTime)
-                .ThenInclude(stt => stt.Course)
-                .ThenInclude(cr => cr.Semester)
-                .OrderByDescending(re => re.StudyTime.Course.Semester.begin_year);
+            return null;
         }
     }
 }

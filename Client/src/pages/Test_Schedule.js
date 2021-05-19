@@ -1,5 +1,8 @@
 import React from "react";
 import Header from "../components/UserHeader/Header";
+import LocalService from "../apis/local.service";
+import AuthService from "../apis/auth.service";
+import moment from "moment";
 // reactstrap components
 import {
   Card,
@@ -22,17 +25,31 @@ import {
   InputGroupAddon,
   InputGroupText,
   InputGroup,
-
 } from "reactstrap";
 
 function Test(props) {
+  const [exams, setExams] = React.useState([]);
+  const currentUser = AuthService.getCurrentUser();
+  const id = currentUser.username.split("-")[1];
+  React.useEffect(() => {
+    async function getData() {
+      const response = await LocalService.getChildrenById(
+        "students",
+        id,
+        "exam_schedule"
+      );
+      setExams(response.data);
+      console.log(response)
+    }
+    getData()
+  }, []);
   return (
     <>
       {/*Header */}
       <Header />
 
       {/* Page content */}
-      <Container className="mt--8" >
+      <Container className="mt--8">
         {/* Table */}
         <Row>
           <div className="col">
@@ -42,8 +59,6 @@ function Test(props) {
               </CardHeader>
               <Form className="">
                 <div className="p-2 d-flex resFlex-column">
-              
-
                   <FormGroup className="mb-0 ml-auto edit-form-group ">
                     <InputGroup className="">
                       <InputGroupAddon addonType="prepend">
@@ -76,117 +91,38 @@ function Test(props) {
                       <th scope="col">
                         Phòng thi <i className="fas fa-sort"></i>
                       </th>
-                      <th scope="col" />
                     </tr>
                   </thead>
                   <tbody>
-                    <tr>
-                      <th scope="row">
-                        <Media>
-                          <span className="mb-0 text-sm">
-                            Những nguyên lý cơ bản của chủ nghĩa MLN F2
-                          </span>
-                        </Media>
-                      </th>
-                      <td>10</td>
+                    {exams.map((item, index) => {
+                      return (
+                        <tr>
+                          <th scope="row">
+                            <Media>
+                              <span className="mb-0 text-sm">
+                                {item.courseClass}
+                              </span>
+                            </Media>
+                          </th>
+                          <td>{moment(item.day).format("YYYY-MM-DD")}</td>
 
-                      <td>10</td>
+                          <td>{item.shift}</td>
 
-                      <td>10</td>
+                          <td>{item.type}</td>
 
-                      <td>1</td>
+                          <td>{item.number}</td>
 
-                      <td>1</td>
-
-                      <td className="text-right">
-                        <UncontrolledDropdown>
-                          <DropdownToggle
-                            className="btn-icon-only text-light"
-                            href="#pablo"
-                            role="button"
-                            size="sm"
-                            color=""
-                            onClick={(e) => e.preventDefault()}
-                          >
-                            <i className="fas fa-ellipsis-v" />
-                          </DropdownToggle>
-                          <DropdownMenu className="dropdown-menu-arrow" right>
-                            <DropdownItem
-                              href="#pablo"
-                              onClick={(e) => e.preventDefault()}
-                            >
-                              Action
-                            </DropdownItem>
-                            <DropdownItem
-                              href="#pablo"
-                              onClick={(e) => e.preventDefault()}
-                            >
-                              Another action
-                            </DropdownItem>
-                            <DropdownItem
-                              href="#pablo"
-                              onClick={(e) => e.preventDefault()}
-                            >
-                              Something else here
-                            </DropdownItem>
-                          </DropdownMenu>
-                        </UncontrolledDropdown>
-                      </td>
-                    </tr>
+                          <td>{item.room}</td>
+                        </tr>
+                      );
+                    })}
                   </tbody>
                 </Table>
               </Form>
 
               <CardFooter className="py-4">
                 <nav aria-label="...">
-                  <Pagination
-                    className="pagination justify-content-end mb-0"
-                    listClassName="justify-content-end mb-0"
-                  >
-                    <PaginationItem className="disabled">
-                      <PaginationLink
-                        href="#pablo"
-                        onClick={(e) => e.preventDefault()}
-                        tabIndex="-1"
-                      >
-                        <i className="fas fa-angle-left" />
-                        <span className="sr-only">Previous</span>
-                      </PaginationLink>
-                    </PaginationItem>
-                    <PaginationItem className="active">
-                      <PaginationLink
-                        href="#pablo"
-                        onClick={(e) => e.preventDefault()}
-                      >
-                        1
-                      </PaginationLink>
-                    </PaginationItem>
-                    <PaginationItem>
-                      <PaginationLink
-                        href="#pablo"
-                        onClick={(e) => e.preventDefault()}
-                      >
-                        2 <span className="sr-only">(current)</span>
-                      </PaginationLink>
-                    </PaginationItem>
-                    <PaginationItem>
-                      <PaginationLink
-                        href="#pablo"
-                        onClick={(e) => e.preventDefault()}
-                      >
-                        3
-                      </PaginationLink>
-                    </PaginationItem>
-                    <PaginationItem>
-                      <PaginationLink
-                        href="#pablo"
-                        onClick={(e) => e.preventDefault()}
-                      >
-                        <i className="fas fa-angle-right" />
-                        <span className="sr-only">Next</span>
-                      </PaginationLink>
-                    </PaginationItem>
-                  </Pagination>
+                
                 </nav>
               </CardFooter>
             </Card>

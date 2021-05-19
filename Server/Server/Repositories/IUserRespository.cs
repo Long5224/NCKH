@@ -10,5 +10,7 @@ namespace Server.Repositories
     public interface IUserRespository : IRepositoryBase<User>
     {
         User GetUser(UserDTO user);
+
+        User GetUserByUserName(string userName);
     }
 }

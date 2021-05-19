@@ -34,6 +34,8 @@ function update(apiUrl, id, data) {
     return http.put(`${apiUrl}/${id}/`, data);
 }
 
+
+
 function updateForChildren(apiUrl, id, childUrl, data) {
     return http.put(`${apiUrl}/${id}/${childUrl}`, data);
 }

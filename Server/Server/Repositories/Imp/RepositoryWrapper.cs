@@ -24,9 +24,12 @@ namespace Server.Repositories.Imp
         private IDataShaper<Student> _studentDataShaper;
         private IDataShaper<Class> _classDataShaper;
         private IDataShaper<Faculty> _facultyDataShaper;
-       
+        private IStudyTimeRespository _studyTime;
+        private IGeneralRespository _general;
+        private INotificationRepository _notificationPost;
+
         public RepositoryWrapper(NCKH_DBContext repositoryContext, IDataShaper<Student> studentDataShaper, IDataShaper<Class> classDataShaper
-            ,IDataShaper<Faculty> facultyDataShaper)
+            , IDataShaper<Faculty> facultyDataShaper)
         {
             _repoContext = repositoryContext;
             _studentDataShaper = studentDataShaper;
@@ -49,7 +52,7 @@ namespace Server.Repositories.Imp
         {
             get
             {
-                if(_class == null)
+                if (_class == null)
                 {
                     _class = new ClassRepository(_repoContext, _classDataShaper);
                 }
@@ -150,6 +153,41 @@ namespace Server.Repositories.Imp
                     _parent = new ParentRespository(_repoContext);
                 }
                 return _parent;
+            }
+        }
+        public IStudyTimeRespository StudyTime
+        {
+            get
+            {
+                if (_studyTime == null)
+                {
+                    _studyTime = new StudyTimeRespository(_repoContext);
+                }
+                return _studyTime;
+            }
+        }
+
+        public IGeneralRespository General
+        {
+            get
+            {
+                if (_general == null)
+                {
+                    _general = new GeneralRespository(_repoContext);
+                }
+                return _general;
+            }
+        }
+
+        public INotificationRepository Notification
+        {
+            get
+            {
+                if (_notificationPost == null)
+                {
+                    _notificationPost = new NotificationRepository(_repoContext);
+                }
+                return _notificationPost;
             }
         }
 

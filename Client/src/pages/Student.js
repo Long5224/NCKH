@@ -29,14 +29,14 @@ const Student = (props) => {
   
   useEffect(() => {
     async function getData() {
-      const response = await Local.getById(PATH.API_STUDENT, studentId);
+      const response = await Local.getById(PATH.API_STUDENTS, studentId);
       setInfoStudent(response.data);
     }
     getData();
   }, [studentId]);
   return (
     <>
-      <UserHeader data={infoStudent} role={"teacher"} />
+      <UserHeader data={infoStudent} page="student"/>
     </>
   );
 };

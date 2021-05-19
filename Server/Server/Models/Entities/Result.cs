@@ -20,13 +20,10 @@ namespace Server.Models.Entities
         [Column(TypeName = "nvarchar(100)")]
         public string evaluation { get; set; }
 
+        [Key]
         public long Studytimeid { get; set; }
 
         public StudyTime StudyTime { get; set; }
-
-        public long Studentid { get; set; }
-
-        public Student Student { get; set; }
 
     }
 }

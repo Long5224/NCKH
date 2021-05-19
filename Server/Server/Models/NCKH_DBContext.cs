@@ -18,8 +18,7 @@ namespace Server.Models
             modelBuilder.Entity<Evaluation>()
                 .HasKey(el => new { el.Studentid, el.Semesterid});
 
-            modelBuilder.Entity<Result>()
-                .HasKey(rs => new { rs.Studentid, rs.Studytimeid });
+          
         }
         public DbSet<Student> Student { get; set; }
 
@@ -46,5 +45,15 @@ namespace Server.Models
         public DbSet<Role> Roles { get; set; }
 
         public DbSet<Parent> Parents { get; set; }
+
+        public DbSet<Stage> Stages { get; set; }
+
+        public DbSet<Lesson> Lessons { get; set; }
+
+        public DbSet<Exam_Schedule> Exam_Schedules { get; set; }
+
+        public DbSet<General> Generals { get; set; }
+
+        public DbSet<NotificationPost> NotificationPosts { get; set; }
     }
 }

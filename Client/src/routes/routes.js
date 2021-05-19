@@ -1,6 +1,6 @@
 import Index from "../pages/General-Info";
 import Score from "../pages/Score";
-import Study_Schedule from "../pages/Study_Schedule";
+import Study_Schedule from "../pages/Study_Schedule1";
 import Test_Schedule from "../pages/Test_Schedule";
 import Notification from "../pages/Notification";
 import Scholarship from "../pages/Scholarship";
@@ -9,6 +9,7 @@ import ChangePassword from "../pages/ChangePassword";
 import LoginPage from "../pages/Login";
 import Students from "../pages/Students"
 import Message from "../pages/Message"
+import Tuition from "../pages/Tuition"
 var routes = [
   {
     path: "/index",
@@ -68,12 +69,13 @@ var routes = [
   },
   {
     path: "/scholarship",
-    name: "Học bổng và Rèn luyện",
-    icon: "fas fa-dumbbell text-primary",
+    name: "Thông tin khác",
+    icon: "fas fa-info text-primary",
     component: Scholarship,
     layout: "/home",
     role: ["student", "parent"]
   },
+
   {
     path: "/teacher",
     name: "Cố vấn học tập",

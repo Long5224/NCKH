@@ -16,6 +16,8 @@ namespace Server.Models.Entities
         [Column(TypeName = "nvarchar(100)")]
         public string name { get; set; }
 
+        public int tinchi { get; set; }
+
         public ICollection<StudyTime> StudyTimes { get; set; }
 
         [ForeignKey("Semesterid")]

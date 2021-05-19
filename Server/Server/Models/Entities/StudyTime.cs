@@ -17,6 +17,15 @@ namespace Server.Models.Entities
         public long Courseid { get; set; }
         public Course Course { get; set; }
 
+        [ForeignKey("studentId")]
+        public long studentId { get; set; }
+
+        public Student Student { get; set; }
+
+        [ForeignKey("semesterId")]
+        public long semesterId { get; set; }
+
+        public Semester Semester { get; set; }
 
 
     }

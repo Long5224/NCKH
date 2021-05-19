@@ -169,7 +169,7 @@ namespace Server.Controllers
         {
             try
             {
-                var results = _repository.Result.GetResultOfSemesterByStudentId(id);
+                var results = _repository.StudyTime.GetResultOfSemesterByStudentId(id).OrderBy(x => x.semesterId);
                 if (results == null)
                 {
                     _logger.LogError($"Results with student id: {id}, hasn't been found in db.");
@@ -178,14 +178,106 @@ namespace Server.Controllers
                 else
                 {
                     _logger.LogInfo($"Returned Results with student id: {id}");
-                    var Results = _mapper.Map<IEnumerable<ResultDTO>>(results);
-                    return Ok(Results);
+                    return Ok(results);
                 }
             }
             catch (Exception ex)
             {
                 _logger.LogError($"Something went wrong inside GetScoreByStudentId action: {ex.Message}");
                 return StatusCode(500, "Internal server error");
+            }
+
+        }
+
+        [HttpGet("{id}/averageScore")]
+        public IActionResult GetAverageScoreByStudentId(long id)
+        {
+            try
+            {
+                var results = _repository.StudyTime.GetResultOfAverageSemesterByStudentId(id);
+                if (results == null)
+                {
+                    _logger.LogError($"Results with student id: {id}, hasn't been found in db.");
+                    return NotFound();
+                }
+                else
+                {
+                    _logger.LogInfo($"Returned Results with student id: {id}");
+                    return Ok(results);
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"Something went wrong inside GetScoreByStudentId action: {ex.Message}");
+                return StatusCode(500, "Internal server error");
+            }
+
+        }
+
+        [HttpGet("{id}/study_schedule")]
+        public IActionResult GetStudyScheduleByStudentId(long id)
+        {
+            try
+            {
+                var results = _repository.StudyTime.GetStudySchedule(id);
+                if (results == null)
+                {
+                    _logger.LogError($"Results with student id: {id}, hasn't been found in db.");
+                    return NotFound();
+                }
+                else
+                {
+                    _logger.LogInfo($"Returned Results with student id: {id}");
+                    return Ok(results);
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"Something went wrong inside GetTeacherByStudentId action: {ex.Message}");
+                return StatusCode(500, "Internal server error");
+            }
+
+
+        }
+
+        [HttpGet("{id}/exam_schedule")]
+        public IActionResult GetExamScheduleByStudentId(long id)
+        {
+            try
+            {
+                var results = _repository.StudyTime.GetExam_Schedules(id);
+                if (results == null)
+                {
+                    _logger.LogError($"Results with student id: {id}, hasn't been found in db.");
+                    return NotFound();
+                }
+                else
+                {
+                    _logger.LogInfo($"Returned Results with student id: {id}");
+                    return Ok(results);
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"Something went wrong inside GetTeacherByStudentId action: {ex.Message}");
+                return StatusCode(500, "Internal server error");
+            }
+        }
+
+        [HttpGet("{id}/general")]
+        public IActionResult GetGeneralByStudentId(long id)
+        {
+
+            var results = _repository.General.GetGenerals(id);
+            if (results == null)
+            {
+                _logger.LogError($"Results with student id: {id}, hasn't been found in db.");
+                return NotFound();
+            }
+            else
+            {
+                _logger.LogInfo($"Returned Results with student id: {id}");
+                return Ok(results);
             }
 
         }

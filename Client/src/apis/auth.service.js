@@ -17,6 +17,10 @@ const login = (username, password) => {
     });
 };
 
+const update = (data) => {
+  return axios.put(API_URL + "repassword", data);
+}
+
 const getCurrentUser = () => {
   return JSON.parse(localStorage.getItem("user"));
 };
@@ -38,5 +42,6 @@ export default {
     getCurrentUser,
     getCurrentUserUserName,
     getCurrentUserRole,
+    update,
     logout
   };

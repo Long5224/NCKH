@@ -43,12 +43,14 @@ function Index() {
     }
   });
   const currentUser = AuthService.getCurrentUser();
-  const { register, errors, handleSubmit } = useForm();
+  const id = currentUser.username.split('-')[1]
+  const role = currentUser.role
+  const useName = currentUser.username
+  const { register,  formState: { errors } , handleSubmit } = useForm();
   useEffect(() => {
     async function getData() {
-      const id = currentUser.username.split('-')[1]
-      const role = currentUser.role
-      if(role === "student"){
+      
+      if(role === "student" || role === "parent"){
       const response = await LocalService.getById(
         PATH.API_STUDENTS,
         id
@@ -80,13 +82,14 @@ function Index() {
       placeOfBirth: infoUser.placeOfBirth,
       phoneNumber: infoUser.phoneNumber,
     };
+    console.log(data)
     
     LocalService.update(PATH.API_STUDENTS, infoUser.id, JSON.stringify(updateData))
       .then(() => {
-        alert("File Updated Success");
+        alert("Updated Success");
       })
       .catch((error) => {
-        console.log(error);
+        alert("Mật khẩu chưa chính xác");
       });
   };
 
@@ -97,7 +100,7 @@ function Index() {
   }
   return (
     <>
-      <UserHeader data={infoUser} role={"student"} />
+      <UserHeader data={infoUser} page="general"/>
       {/* Page content */}
       <Container className="mt--7">
         <Row>
@@ -136,6 +139,7 @@ function Index() {
                             placeholder="Username"
                             type="text"
                             disabled
+                            value={useName}
                           />
                         </FormGroup>
                       </Col>
@@ -150,16 +154,14 @@ function Index() {
                           <input
                             className="form-control-alternative form-control"
                             id="input-phone"
-                            name="phoneNumber"
                             placeholder="0123456789"
                             value={infoUser.phoneNumber}
+                            {...register("phoneNumber")}
                             type="text"
                             onChange={handleChange}
-                            ref={register({
-                              required: "This input is required.",
-                            })}
+                            
                           />
-                          {errors.phoneNumber && "Phone Number is required"}
+                          
                         </FormGroup>
                       </Col>
                     </Row>
@@ -334,10 +336,10 @@ function Index() {
                             className="form-control-alternative form-control"
                             id="input-placeOfBirth"
                             type="text"
+                            {...register("placeOfBirth")}
                             value={infoUser.placeOfBirth}
-                            name="placeOfBirth"
                             onChange={handleChange}
-                            ref={register}
+                         
                           />
                         </FormGroup>
                       </Col>

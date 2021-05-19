@@ -22,5 +22,10 @@ namespace Server.Repositories.Imp
                 .Include(us => us.Role)
                 .FirstOrDefault();
         }
+
+        public User GetUserByUserName(string userName)
+        {
+            return FindByCondition(us => us.username.Equals(userName)).FirstOrDefault();
+        }
     }
 }

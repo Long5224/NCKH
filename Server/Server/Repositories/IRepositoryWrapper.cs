@@ -27,6 +27,12 @@ namespace Server.Repositories.Imp
         IUserRespository User { get; }
 
         IParentRespository Parent { get; }
+
+        IStudyTimeRespository StudyTime { get; }
+
+        IGeneralRespository General { get; }
+
+        INotificationRepository Notification { get; }
         void Save();
     }
 }

@@ -9,6 +9,7 @@ using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 using System.Security.Claims;
+using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -20,7 +21,7 @@ namespace Server.Controllers
     {
         private IRepositoryWrapper _repository;
         private ILoggerManager _logger;
-  
+
 
         public AuthController(IRepositoryWrapper repository, ILoggerManager logger)
         {
@@ -32,11 +33,16 @@ namespace Server.Controllers
         [HttpPost, Route("login")]
         public IActionResult Login([FromBody] UserDTO user)
         {
+            string sb = EncodePassword(user.password);
+            UserDTO authen = new UserDTO();
+            authen.username = user.username;
+            authen.password = sb;
+
             if (user == null)
             {
                 return BadRequest("Invalid client request");
             }
-            var us = _repository.User.GetUser(user);
+            var us = _repository.User.GetUser(authen);
             if (us != null)
             {
                 var secretKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("superSecretKey@345"));
@@ -63,5 +69,39 @@ namespace Server.Controllers
                 return StatusCode(500, "Mật khẩu hoặc tài khoản không chĩnh xác");
             }
         }
+
+        [HttpPut, Route("repassword")]
+        public IActionResult RePassword([FromBody] RePassword rePassword)
+        {
+            var user = _repository.User.GetUserByUserName(rePassword.userName);
+            string oldPassword = EncodePassword(rePassword.oldPassword);
+            if (user.password.Equals(oldPassword) == false)
+            {
+                return StatusCode(500, "Mật khẩu cũ không chính xác");
+            }
+            user.password = EncodePassword(rePassword.newPassword);
+            _repository.User.Update(user);
+            _repository.Save();
+            return Ok("Đổi mật khẩu thành công");
+
+        }
+        public string EncodePassword(string password)
+        {
+            MD5 mh = MD5.Create();
+            //Chuyển kiểu chuổi thành kiểu byte
+            byte[] inputBytes = System.Text.Encoding.ASCII.GetBytes(password);
+            //mã hóa chuỗi đã chuyển
+            byte[] hash = mh.ComputeHash(inputBytes);
+            //tạo đối tượng StringBuilder (làm việc với kiểu dữ liệu lớn)
+            StringBuilder sb = new StringBuilder();
+
+            for (int i = 0; i < hash.Length; i++)
+            {
+                sb.Append(hash[i].ToString("X2"));
+            }
+            return sb.ToString().ToLower();
+        }
     }
+
+    
 }

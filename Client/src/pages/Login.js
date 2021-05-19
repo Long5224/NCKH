@@ -1,6 +1,8 @@
 import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import AuthService from "../apis/auth.service";
+import { yupResolver } from "@hookform/resolvers/yup";
+import * as yup from "yup";
 // reactstrap components
 import {
   Button,
@@ -18,16 +20,15 @@ import {
 } from "reactstrap";
 
 const Login = () => {
-  const { register, handleSubmit, errors } = useForm();
+  
   const [loading, setLoading] = useState(false);
-  const [formValues, setFormValues] = useState({
-    username: "",
-    password: "",
+  const schema = yup.object().shape({
+    username: yup.string().required("Hãy nhập tên tài khoản"),
+    password: yup.string().required("Hãy nhập mật khẩu"),
   });
-  function handleOnChange(event) {
-    const val = event.target;
-    setFormValues({ ...formValues, [val.name]: val.value });
-  }
+  const { register, handleSubmit, formState: { errors } } = useForm({
+    resolver: yupResolver(schema),
+  });
   const onSubmit = (data) => {
     setLoading(true);
 
@@ -73,16 +74,11 @@ const Login = () => {
                     className="form-control-alternative form-control"
                     placeholder="UserName"
                     type="text"
-                    name="username"
-                    value={formValues.username}
-                    onChange={handleOnChange}
-                    ref={register({ required: true })}
+                    {...register("username")}
                     autoComplete="new-useName"
                   />
                 </InputGroup>
-                {errors.username && (
-                  <div className="form_error">This field is required</div>
-                )}
+                <p style={{ color: "red" }}>{errors.username?.message}</p>
               </FormGroup>
               <FormGroup>
                 <InputGroup className="input-group-alternative">
@@ -95,16 +91,11 @@ const Login = () => {
                     className="form-control-alternative form-control"
                     placeholder="Password"
                     type="password"
-                    name="password"
-                    value={formValues.password}
-                    onChange={handleOnChange}
-                    ref={register({ required: true })}
+                    {...register("password")}
                     autoComplete="new-password"
                   />
                 </InputGroup>
-                {errors.password && (
-                  <div className="form_error">This field is required</div>
-                )}
+                <p style={{ color: "red" }}>{errors.password?.message}</p>
               </FormGroup>
               <div className="custom-control custom-control-alternative custom-checkbox">
                 <input

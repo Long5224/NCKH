@@ -16,7 +16,5 @@ namespace Server.DTO
 
         public string evaluation { get; set; }
 
-        public StudyTimeDTO StudyTime { get; set; }
-
     }
 }
