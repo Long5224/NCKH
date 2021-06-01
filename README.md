@@ -1,2 +1,2 @@
 # NCKH
-Nghiên cứu khoa học
+Nghiên cứu khoa học (ReactJs, Asp.Net Core)
