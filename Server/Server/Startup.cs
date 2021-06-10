@@ -21,6 +21,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using Server.Hubs;
+using Microsoft.AspNetCore.SignalR;
 
 namespace Server
 {
@@ -56,6 +57,22 @@ namespace Server
             ValidAudience = "http://localhost:5000",
             IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("superSecretKey@345"))
             };
+            options.Events = new JwtBearerEvents {
+                OnMessageReceived = context =>
+                {
+                    var accessToken = context.Request.Query["access_token"];
+
+                    // If the request is for our hub...
+                    var path = context.HttpContext.Request.Path;
+                    if (!string.IsNullOrEmpty(accessToken) &&
+                        (path.StartsWithSegments("/hubs/notification") || path.StartsWithSegments("/hubs/message")))
+                    {
+                        // Read the token out of the query string
+                        context.Token = accessToken;
+                    }
+                    return Task.CompletedTask;
+                }
+            };
             });
 
             services.AddDbContext<NCKH_DBContext>(options =>
@@ -90,6 +107,7 @@ namespace Server
             {
                 o.EnableDetailedErrors = true;
             });
+            services.AddSingleton<IUserIdProvider, UserIdProvider>();
 
         }
 
@@ -99,8 +117,10 @@ namespace Server
             app.UseCors(options =>
            options.WithOrigins("http://localhost:3000")
            .AllowAnyHeader()
-           .AllowAnyOrigin()
+           
            .AllowAnyMethod()
+           .SetIsOriginAllowed((x) => true)
+           .AllowCredentials()
            );
            
             if (env.IsDevelopment())
@@ -114,11 +134,13 @@ namespace Server
 
             app.UseAuthorization();
 
+
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
 
-                endpoints.MapHub<NotificationHub>("/Hubs/notification");
+                endpoints.MapHub<NotificationHub>("/hubs/notification");
+                endpoints.MapHub<MessageHub>("/hubs/message");
             });
 
            

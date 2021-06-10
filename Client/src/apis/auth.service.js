@@ -11,7 +11,7 @@ const login = (username, password) => {
     })
     .then((response) => {
       if (response.data.token) {
-        localStorage.setItem("user", JSON.stringify(response.data));
+        localStorage.setItem("user", JSON.stringify(response.data));       
       }
       return response;
     });
@@ -19,6 +19,10 @@ const login = (username, password) => {
 
 const getCurrentUser = () => {
   return JSON.parse(localStorage.getItem("user"));
+};
+
+const getCurrentUserToken = () => { 
+  return JSON.parse(localStorage.getItem("user").token);
 };
 
 const getCurrentUserRole = () => {
@@ -31,11 +35,13 @@ const getCurrentUserUserName = () => {
 
 const logout = () => {
   localStorage.removeItem("user");
+  localStorage.removeItem("connectionId");
 };
 
 export default {
     login,
     getCurrentUser,
+    getCurrentUserToken,
     getCurrentUserUserName,
     getCurrentUserRole,
     logout

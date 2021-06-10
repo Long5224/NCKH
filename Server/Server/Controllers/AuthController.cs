@@ -43,6 +43,7 @@ namespace Server.Controllers
                 var signinCredentials = new SigningCredentials(secretKey, SecurityAlgorithms.HmacSha256);
                 var claims = new List<Claim>
                 {
+                    new Claim(ClaimTypes.NameIdentifier,us.id.ToString()),
                     new Claim(ClaimTypes.Name, us.username),
                     new Claim(ClaimTypes.Role, us.Role.code)
                 };
@@ -60,7 +61,7 @@ namespace Server.Controllers
             }
             else
             {
-                return StatusCode(500, "Mật khẩu hoặc tài khoản không chĩnh xác");
+                return StatusCode(500, "Mật khẩu hoặc tài khoản không chính xác");
             }
         }
     }

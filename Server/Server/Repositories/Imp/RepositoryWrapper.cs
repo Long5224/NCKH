@@ -22,6 +22,7 @@ namespace Server.Repositories.Imp
         private IResultRespository _result;
         private ICourseClassRespository _courseClass;
         private INotificationRepository _notificationPost;
+        private IMessageRepository _message;
         private IDataShaper<Student> _studentDataShaper;
         private IDataShaper<Class> _classDataShaper;
         private IDataShaper<Faculty> _facultyDataShaper;
@@ -164,6 +165,18 @@ namespace Server.Repositories.Imp
                     _notificationPost = new NotificationRepository(_repoContext);
                 }
                 return _notificationPost;
+            }
+        }
+
+        public IMessageRepository Message
+        {
+            get
+            {
+                if (_message == null)
+                {
+                    _message = new MessageRepository(_repoContext);
+                }
+                return _message;
             }
         }
 

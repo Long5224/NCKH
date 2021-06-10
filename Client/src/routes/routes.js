@@ -7,8 +7,8 @@ import Scholarship from "../pages/Scholarship";
 import Teacher from "../pages/Teacher";
 import ChangePassword from "../pages/ChangePassword";
 import LoginPage from "../pages/Login";
-import Students from "../pages/Students"
-import Message from "../pages/Message"
+import Students from "../pages/Students";
+import Message from "../pages/Message";
 var routes = [
   {
     path: "/index",

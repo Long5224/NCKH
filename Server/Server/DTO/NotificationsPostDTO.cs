@@ -8,14 +8,14 @@ namespace Server.DTO
 {
     public class NotificationsPostDTO
     {
-        public long id { get; set; }
 
         public string header { get; set; }
 
         public string content { get; set; }
 
-        public long userId { get; set; }
+        public string username { get; set; }
 
-        public User user { get; set; }
+        public long classId { get; set; }
+
     }
 }
