@@ -38,14 +38,59 @@ namespace Server.Controllers
         [HttpPost, Route("post-notification")]
         public async Task<IActionResult> CreateNotification([FromBody] NotificationsPostDTO notificationPost)
         {
-            await _notificationHub.Clients.All.SendAsync("sendToReact","The notification: "+ notificationPost.header + " "+notificationPost.content);
-            notificationPost.userId = 1;
+            long id = _repository.User.GetUserByUsername(notificationPost.username).id;
+            await _notificationHub.Clients.Group(notificationPost.classId.ToString()).SendAsync("Send", "The notification: " + notificationPost.header + " " + notificationPost.content);
             NotificationPost notification = new NotificationPost();
             notification.content = notificationPost.content;
             notification.header = notificationPost.header;
-            notification.userId = 1;
+            notification.userId = id; 
             _repository.Notification.Create(notification);
             return Ok();
+        }
+
+
+        [HttpGet("username/{userName}")]
+        public IActionResult GetNotificationsByUserName(string userName)
+        {
+
+            var notifications = _repository.Notification.GetNotificationsByUserName(userName);
+            if (notifications == null)
+            {
+                _logger.LogError($"Notification with userName: {userName}, hasn't been found in db.");
+                return NotFound();
+            }
+            else
+            {
+                _logger.LogInfo($"Returned notification with userName: {userName}");
+                return Ok(notifications);
+            }
+
+
+        }
+
+        [HttpGet("{id}")]
+        public IActionResult GetNotificationById(long id)
+        {
+            try
+            {
+                var notifications = _repository.Notification.GetNotificationById(id);
+                if (notifications == null)
+                {
+                    _logger.LogError($"Notification with id: {id}, hasn't been found in db.");
+                    return NotFound();
+                }
+                else
+                {
+                    _logger.LogInfo($"Returned notification with id: {id}");
+                    return Ok(notifications);
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"Something went wrong inside GetNotificationById action: {ex.Message}");
+                return StatusCode(500, "Internal server error");
+            }
+
         }
     }
     

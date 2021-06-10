@@ -1,4 +1,5 @@
-﻿using Server.Models.Entities;
+﻿using Server.DTO;
+using Server.Models.Entities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,5 +9,8 @@ namespace Server.Repositories
 {
     public interface INotificationRepository:IRepositoryBase<NotificationPost>
     {
+        NotificationDTO GetNotificationsByUserName(string userName);
+
+        NotificationPost GetNotificationById(long id);
     }
 }

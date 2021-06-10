@@ -48,5 +48,7 @@ namespace Server.Models
         public DbSet<Parent> Parents { get; set; }
 
         public DbSet<NotificationPost> NotificationPosts { get; set; }
+
+        public DbSet<Message> Messages { get; set; }
     }
 }

@@ -1,6 +1,6 @@
 import React ,{ useState } from "react";
 import { useForm } from "react-hook-form";
-
+import AuthService from "../apis/auth.service";
 import axios from "axios";
 
 import {
@@ -12,23 +12,31 @@ import {
   Form,
 } from "reactstrap";
 
-const AddNotification = () => {
-  const {handleSubmit, errors } = useForm();
+const AddNotification = (props) => {
+  const {handleSubmit} = useForm();
   const [formValues, setFormValues] = useState({
     header: "",
     content: "",
   });
+  const {classId, addNotification} = props;
   function handleOnChange(event) {
     const val = event.target;
     setFormValues({ ...formValues, [val.name]: val.value });
   }
   const onSubmit = () => {
-    const header = document.getElementById("notification-label").value;
+    const currentUser = AuthService.getCurrentUser();
+    const username = currentUser.username;
+    const header = document.getElementById("notification-label").value
     const content = document.getElementById("notification-content").value;
     return axios.post("http://localhost:5000/api/notification/post-notification/" ,{
       header: header,
-      content: content
-      })
+      content: content,
+      username: username,
+      classId: classId 
+      }).then(() => {
+        addNotification(true);
+        alert("Add Success")
+      }).catch(error => console.log(error))
     
         
   };

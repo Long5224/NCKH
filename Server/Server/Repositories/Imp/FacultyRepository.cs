@@ -11,6 +11,7 @@ namespace Server.Repositories.Imp
     public class FacultyRepository : RespositoryBase<Faculty>, IFacultyRepository
     {
         private IDataShaper<Faculty> _dataShaper;
+
         public FacultyRepository(NCKH_DBContext repositoryContext, IDataShaper<Faculty> dataShaper)
            : base(repositoryContext)
         {
