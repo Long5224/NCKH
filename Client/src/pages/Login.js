@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import AuthService from "../apis/auth.service";
+import {Link} from "react-router-dom";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 // reactstrap components
@@ -11,7 +12,6 @@ import {
   CardBody,
   FormGroup,
   Form,
-  Input,
   InputGroupAddon,
   InputGroupText,
   InputGroup,
@@ -128,13 +128,12 @@ const Login = () => {
         </Card>
         <Row className="mt-3">
           <Col xs="6">
-            <a
+            <Link
               className="text-light"
-              href="#pablo"
-              onClick={(e) => e.preventDefault()}
+              to="forgot"
             >
-              <small>Forgot password?</small>
-            </a>
+              <medium>Quên mật khẩu?</medium>
+            </Link>
           </Col>
         </Row>
       </Col>

@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { NavLink as NavLinkRRD, Link } from "react-router-dom";
 // nodejs library to set properties for components
 import { PropTypes } from "prop-types";
-import AuthService from "../../apis/auth.service"
+import AuthService from "../../apis/auth.service";
 // reactstrap components
 import {
   Collapse,
@@ -28,6 +28,9 @@ import {
 } from "reactstrap";
 
 const Sidebar = (props) => {
+  const currentUser = AuthService.getCurrentUser();
+  const avatar = currentUser.imageSrc;
+  const username = currentUser.username;
   const [collapseOpen, setCollapseOpen] = useState();
   // verifies if routeName is the one active (in browser input)
 
@@ -72,7 +75,7 @@ const Sidebar = (props) => {
   };
 
   function handleLogout() {
-    AuthService.logout()
+    AuthService.logout();
   }
 
   const { routes, logo } = props;
@@ -121,46 +124,39 @@ const Sidebar = (props) => {
         <Nav className="align-items-center d-md-none">
           <i className="ni ni-bell-55" />
           <UncontrolledDropdown nav>
-            <DropdownToggle nav>
-              <Media className="align-items-center">
-                <span className="avatar avatar-sm rounded-circle">
-                  <img
-                    alt="..."
-                    src={
-                      require("../../assets/img/theme/team-4-800x800.jpg")
-                        .default
-                    }
-                  />
-                </span>
-              </Media>
-            </DropdownToggle>
-            <DropdownMenu className="dropdown-menu-arrow" right>
-              <DropdownItem className="noti-title" header tag="div">
-                <h6 className="text-overflow m-0">Welcome!</h6>
-              </DropdownItem>
-              <DropdownItem to="/admin/user-profile" tag={Link}>
-                <i className="ni ni-single-02" />
-                <span>My profile</span>
-              </DropdownItem>
-              <DropdownItem to="/admin/user-profile" tag={Link}>
-                <i className="ni ni-settings-gear-65" />
-                <span>Settings</span>
-              </DropdownItem>
-              <DropdownItem to="/admin/user-profile" tag={Link}>
-                <i className="ni ni-calendar-grid-58" />
-                <span>Activity</span>
-              </DropdownItem>
-              <DropdownItem to="/admin/user-profile" tag={Link}>
-                <i className="ni ni-support-16" />
-                <span>Support</span>
-              </DropdownItem>
-              <DropdownItem divider />
-              <DropdownItem href="#pablo" onClick={(e) => e.preventDefault()}>
-                <i className="ni ni-user-run" />
-                <span>Logout</span>
-              </DropdownItem>
-            </DropdownMenu>
-          </UncontrolledDropdown>
+              <DropdownToggle className="pr-0" nav>
+                <Media className="align-items-center">
+                  <span className="avatar avatar-sm rounded-circle">
+                    <img
+                      alt="..."
+                      src={avatar}
+                    />
+                  </span>
+                  <Media className="ml-2 d-none d-lg-block">
+                    <span className="mb-0 text-sm font-weight-bold">
+                      {username}
+                    </span>
+                  </Media>
+                </Media>
+              </DropdownToggle>
+              <DropdownMenu className="dropdown-menu-arrow" right>
+                <DropdownItem className="noti-title" header tag="div">
+                  <h6 className="text-overflow m-0">Welcome!</h6>
+                </DropdownItem>
+                <DropdownItem to="/home/general" tag={Link}>
+                  <i className="ni ni-single-02" />
+                  <span>Thông tin cá nhân</span>
+                </DropdownItem>
+                <DropdownItem to="/home/notification" tag={Link}>
+                  <i className="ni ni-settings-gear-65" />
+                  <span>Thông báo</span>
+                </DropdownItem>
+                <DropdownItem to="/login" tag={Link} onClick={handleLogout}>
+                  <i className="ni ni-user-run" />
+                  <span>Đăng xuất</span>
+                </DropdownItem>
+              </DropdownMenu>
+            </UncontrolledDropdown>
         </Nav>
         {/* Collapse */}
         <Collapse navbar isOpen={collapseOpen}>
@@ -211,7 +207,7 @@ const Sidebar = (props) => {
           {/* Navigation */}
           <Nav navbar>
             {createLinks(routes)}
-            <NavItem >
+            <NavItem>
               <NavLink
                 to="/login"
                 tag={NavLinkRRD}

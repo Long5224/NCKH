@@ -11,7 +11,6 @@ import {
   Container,
   Row,
   CardBody,
-  UncontrolledAlert,
   Form,
 } from "reactstrap";
 
@@ -38,13 +37,13 @@ function ChangePassword(props) {
   });
   const onSubmit = (data) => {
     console.log(data);
-    if (data.newPassword != data.repeatPassword) {
+    if (data.newPassword !== data.repeatPassword) {
       setIsNotCorrect(true);
     }
     else{
       setIsNotCorrect(false)
       const sendData = {...data, userName: userName}
-      AuthService.update(sendData)
+      AuthService.update(sendData, "repassword")
       .then(() => {
         alert("Updated Success");
       })

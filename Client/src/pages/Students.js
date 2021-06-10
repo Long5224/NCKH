@@ -5,6 +5,7 @@ import Local from "../apis/local.service";
 import { PATH } from "../constansts/API";
 import SearchFilter from "../components/Filter/Search/index";
 import Pagination from "../components/Pagination/index";
+import AuthService from "../apis/auth.service";
 // reactstrap components
 import {
   Card,
@@ -22,9 +23,11 @@ function Students(props) {
   let { path, url } = useRouteMatch();
   const [students, setStudents] = useState([]);
   const [formValues, setFormValues] = useState({
-    search: "",
+    searched: "",
   });
-
+  const currentUser = AuthService.getCurrentUser();
+  const id = currentUser.username.split("-")[1];
+  
   const dataPerPage = 2;
   const [pagesVisited, setPagesVisited] = useState(0);
   const [pageCount, setPageCount] = useState(1);
@@ -32,7 +35,7 @@ function Students(props) {
     async function getData() {
       const response = await Local.getChildrenById(
         PATH.API_TEACHER,
-        "1",
+        id,
         PATH.API_STUDENTS
       );
       setStudents(response.data);
@@ -42,8 +45,8 @@ function Students(props) {
   }, []);
 
   function handleOnChange(val) {
-    setFormValues({...formValues, [val.name]: val.value})
-    setPagesVisited(0)
+    setFormValues({ ...formValues, [val.name]: val.value });
+    setPagesVisited(0);
   }
 
   function handlePageChange(selected) {
@@ -54,16 +57,17 @@ function Students(props) {
 
   const displayData = students
     .filter((val) => {
-      if (formValues.search === "") {
+      if (formValues.searched === "") {
         return val;
       } else if (
         val.firstName
           .concat(" ", val.lastName)
           .toLowerCase()
           .includes(formValues.search.toLowerCase())
-      ) {
+      ){
         return val;
       }
+    
     })
     .slice(pagesVisited, pagesVisited + dataPerPage)
     .map((prop, key) => {

@@ -1,10 +1,11 @@
 import moment from "moment";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { PATH } from "../../constansts/API";
 import LocalService from "../../apis/local.service";
 import { useForm } from "react-hook-form";
 import FilterDropDown from "../Filter/FilterDropDown/index";
-import AuthService from "../../apis/auth.service"
+import AuthService from "../../apis/auth.service";
+import UserContext from "../UserContext/UserContext"
 // reactstrap components
 import {
   Button,
@@ -15,18 +16,19 @@ import {
   CardHeader,
   CardBody,
   Form,
-  UncontrolledAlert,
-  Input,
-  Spinner
+  Modal,
 } from "reactstrap";
 
 const UserHeader = (props) => {
-  const { data, page } = props;
-  const currentUser = AuthService.getCurrentUser();
-  const id = currentUser.username.split('-')[1]
-  const role = currentUser.role
+  const { data, page, onUpdateAvatar } = props;
+  const [previewFile, setPreviewFile] = useState({
+    imageSrc: "/User_Img.png",
+    imageFile: null,
+  });
+  
   const [isSeeMore, setIsSeeMore] = useState(false);
   const [evaluations, setEvaluations] = useState([]);
+  const [defaultModal, setDefaultModal] = useState(false);
   const [currentEvaluation, setCurrentEvaluation] = useState({
     studentid: null,
     semesterid: null,
@@ -40,25 +42,21 @@ const UserHeader = (props) => {
     content: "",
   });
   const [isUpdate, setIsUpdate] = useState(false);
-  const { register, errors, handleSubmit } = useForm();
-  const [currentSelected, setCurrentSelected] = useState("");
-  const [tempData, setTempData] = useState({});
+  const { register, handleSubmit } = useForm();
   useEffect(() => {
     async function getData() {
       const responseEvaluation = await LocalService.getChildrenById(
         PATH.API_STUDENTS,
-        data.id,
+        data.value.id,
         PATH.API_EVALUATION
       );
       setEvaluations(responseEvaluation.data);
-      console.log(responseEvaluation);
       setCurrentEvaluation(responseEvaluation.data[0]);
-      setCurrentSelected(responseEvaluation.data[0].semesterid);
       setIsUpdate(false);
-      setTempData(data);
     }
     getData();
   }, [data, isUpdate]);
+
 
   function handleOnChange(receiveValues) {
     const currentEvl = evaluations.filter((val) => {
@@ -67,12 +65,26 @@ const UserHeader = (props) => {
       }
     });
     setCurrentEvaluation({ ...currentEvl[0] });
-    setCurrentSelected(receiveValues.semesterid);
   }
 
   function handleChangeTextArea(event) {
     const { name, value } = event.target;
     setCurrentEvaluation({ ...currentEvaluation, [name]: value });
+  }
+
+  function showPreview(e) {
+    if (e.target.files && e.target.files[0]) {
+      let imageFile = e.target.files[0];
+      const reader = new FileReader();
+      reader.onload = (x) => {
+        setPreviewFile({
+          ...previewFile,
+          imageFile,
+          imageSrc: x.target.result,
+        });
+      };
+      reader.readAsDataURL(imageFile);
+    }
   }
 
   function saveInfo() {
@@ -89,12 +101,39 @@ const UserHeader = (props) => {
     )
       .then(() => {
         setIsUpdate(true);
-        alert("Update Success")
+        alert("Update Success");
       })
       .catch((error) => {
         setIsUpdate(false);
       });
   }
+
+  const handleUpdateAvatar = (value) => {
+    onUpdateAvatar(value, "imageSrc");
+  }
+
+  const updateFile = (updatedData) => {
+    if (updatedData.file[0] != null) {
+      const formData = new FormData();
+      formData.append("username", data.user.username);
+      formData.append("avatar", updatedData.file[0]);
+      AuthService.update(formData, "update_avatar")
+        .then((response) => {
+          document.getElementById('image-uploader').value = null;
+          setPreviewFile({
+            imageSrc: "/User_Img.png",
+            imageFile: null,
+          });
+          setDefaultModal(!defaultModal);
+          handleUpdateAvatar(response.data);
+          alert("Upload File Success");
+
+        })
+        .catch((errors) => alert(errors));
+    } else {
+      alert("Bạn chưa chọn file");
+    }
+  };
 
   return (
     <>
@@ -119,9 +158,7 @@ const UserHeader = (props) => {
                         <img
                           alt="..."
                           className="rounded-circle"
-                          src={
-                            require("../../assets/images/User_Img.png").default
-                          }
+                          src={data.user.imageSrc}
                         />
                       </a>
                     </div>
@@ -129,21 +166,19 @@ const UserHeader = (props) => {
                 </Row>
                 <CardHeader className="text-center border-0 pt-8 pt-md-4 pb-0 pb-md-4">
                   <div className="d-flex justify-content-between">
-                    {window.location.pathname === "/home/teacher" ? (
+                    {window.location.pathname === "/home/teacher"  ? (
                       ""
-                    ) : (
+                    ) : page !== "student" ? (
                       <Button
                         className="mr-4 btn-edit"
                         color="info"
-                        href="#pablo"
-                        onClick={(e) => e.preventDefault()}
+                        onClick={() => setDefaultModal(!defaultModal)}
                         size="sm"
                       >
                         Thay đổi ảnh đại diện
                       </Button>
-                    )}
-
-                    <Button
+                    ) : (
+                      <Button
                       className="float-right"
                       color="default"
                       href="#pablo"
@@ -152,6 +187,7 @@ const UserHeader = (props) => {
                     >
                       Tin nhắn
                     </Button>
+                    )}
                   </div>
                 </CardHeader>
                 <CardBody className="pt-0 pt-md-4">
@@ -159,40 +195,41 @@ const UserHeader = (props) => {
                     <div className="col">
                       <div className="card-profile-stats  justify-content-center mt-md-5 text-center ">
                         <h3>
-                          {data.firstName + " " + data.lastName}
+                          {data.value.firstName + " " + data.value.lastName}
                           <span className="font-weight-light">
-                            , {moment(data.dateOfBirth).fromNow(true)}
+                            , {moment(data.value.dateOfBirth).fromNow(true)}
                           </span>
                         </h3>
                         <div className="h4 font-weight-300">
                           <i className="ni location_pin mr-2" />
-                          {data.placeOfBirth}
+                          {data.value.placeOfBirth}
                         </div>
                         <div className="h4 font-weight-300">
                           <i className="ni location_pin mr-2" />
-                          {data.phoneNumber}
+                          {data.value.phoneNumber}
                         </div>
-                        {(role === "parent" || role === "student") && page == "general" ? (
+                        {(data.user.role === "parent" || data.user.role === "student") &&
+                        page === "general" ? (
                           <div className="h5 ">
                             <i className="ni business_briefcase-24 mr-2" />
                             {"Khoa " +
-                              data.class.faculty.name +
+                              data.value.class.faculty.name +
                               " " +
-                              data.class.name}
+                              data.value.class.name}
                           </div>
                         ) : (
                           ""
                         )}
 
                         <hr className="my-4" />
-                        {(role === "parent" || role === "teacher") &&
+                        {(data.role === "parent" || data.role === "teacher") &&
                         isSeeMore === true ? (
                           <Card className="shadow mb-3">
                             <CardHeader className="border-0 d-flex">
                               <h3 className="mb-0 mt-2">Đánh giá học kì</h3>
                               <Form className="ml-auto">
                                 <FilterDropDown
-                                  currentSelected={currentEvaluation.semesterid}
+                                  id={data.value.id}
                                   onChange={handleOnChange}
                                   page=""
                                 />
@@ -200,8 +237,6 @@ const UserHeader = (props) => {
                             </CardHeader>
                             <hr className="my-4" />
                             <CardBody>
-                             
-
                               <Form
                                 className="mt-4"
                                 onSubmit={handleSubmit(saveInfo)}
@@ -221,8 +256,12 @@ const UserHeader = (props) => {
                                       placeholder="Required example textarea"
                                       value={currentEvaluation.content}
                                       onChange={handleChangeTextArea}
-                                      {...register("content", { required: true })}
-                                      disabled={role === "parent" ? true : false}
+                                      {...register("content", {
+                                        required: true,
+                                      })}
+                                      disabled={
+                                        data.user.role === "parent" ? true : false
+                                      }
                                     ></textarea>
                                   </div>
                                 </div>
@@ -230,7 +269,7 @@ const UserHeader = (props) => {
                                 <button
                                   type="submit"
                                   class="btn btn-primary"
-                                  disabled={role === "parent" ? true : false}
+                                  disabled={data.user.role === "parent" ? true : false}
                                 >
                                   Submit
                                 </button>
@@ -241,8 +280,9 @@ const UserHeader = (props) => {
                           ""
                         )}
 
-                        {role == "parent" && (page == "general") || (role == "teacher" && page == "student") ? (
-                          isSeeMore == true ? (
+                        {(data.user.role === "parent" && page === "general") ||
+                        (data.user.role === "teacher" && page === "student") ? (
+                          isSeeMore === true ? (
                             <span
                               className="seeMore"
                               onClick={() => {
@@ -274,6 +314,76 @@ const UserHeader = (props) => {
           </Row>
         </Container>
       </div>
+      <Modal
+        className="modal-dialog-centered"
+        isOpen={defaultModal}
+        toggle={() => setDefaultModal(!defaultModal)}
+      >
+        <div className="modal-header">
+          <h2 className="modal-title" id="modal-title-default">
+            Thay đổi ảnh đại diện
+          </h2>
+          <button
+            aria-label="Close"
+            className="close"
+            data-dismiss="modal"
+            type="button"
+            onClick={() => setDefaultModal(!defaultModal)}
+          >
+            <span aria-hidden={true}>×</span>
+          </button>
+        </div>
+        <div className="modal-body">
+          <form
+            autoComplete="off"
+            noValidate
+            id="update-file"
+            onSubmit={handleSubmit(updateFile)}
+          >
+            <div className="card">
+              <img
+                src={previewFile.imageSrc}
+                className="card-img-top"
+                height="300"
+                width="300"
+                alt="preview"
+              />
+              <div className="card-body">
+                <div className="form-group">
+                  <input
+                    type="file"
+                    accept="/*"
+                    id="image-uploader"
+                    className="form-control-file"
+                    {...register("file")}
+                    onChange={showPreview}
+                  />
+                </div>
+              </div>
+            </div>
+          </form>
+        </div>
+        <div className="modal-footer">
+          <Button color="primary" type="submit" form="update-file">
+            Lưu
+          </Button>
+          <Button
+            className="ml-auto"
+            color="danger"
+            data-dismiss="modal"
+            type="button"
+            onClick={() => {
+              setDefaultModal(!defaultModal);
+              setPreviewFile({
+                imageSrc: "/User_Img.png",
+                imageFile: null,
+              });
+            }}
+          >
+            Đóng
+          </Button>
+        </div>
+      </Modal>
     </>
   );
 };

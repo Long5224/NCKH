@@ -17,7 +17,6 @@ import {
   Row,
   CardBody,
   ListGroup,
-  ListGroupItem,
   Form,
   FormGroup,
   InputGroup,
@@ -37,7 +36,7 @@ function Notification(props) {
       console.log(response)
     }
     getData();
-  }, [])
+  }, [userName])
   return (
     <>
       {/*Header */}

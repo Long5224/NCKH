@@ -1,11 +1,7 @@
-
 import React from "react";
-import { useLocation, Route, Switch, Redirect } from "react-router-dom";
+import { useLocation, Route, Switch } from "react-router-dom";
 // reactstrap components
 import { Container, Row } from "reactstrap";
-
-// core components
-
 
 import routes from "../routes/routes";
 
@@ -27,14 +23,8 @@ const Login = (props) => {
 
   const getRoutes = (routes) => {
     return routes.map((prop, key) => {
-      if (prop.layout === "/login") {
-        return (
-          <Route
-            path={prop.layout + prop.path}
-            component={prop.component}
-            key={key}
-          />
-        );
+      if (prop.layout === "/auth") {
+        return <Route path={prop.layout + prop.path} component={prop.component} key={key} />;
       } else {
         return null;
       }
@@ -44,7 +34,6 @@ const Login = (props) => {
   return (
     <>
       <div className="main-content" ref={mainContent}>
-       
         <div className="header bg-gradient-info py-7 py-lg-8">
           <div className="separator separator-bottom separator-skew zindex-100">
             <svg
@@ -65,14 +54,10 @@ const Login = (props) => {
         {/* Page content */}
         <Container className="mt--8 pb-5">
           <Row className="justify-content-center">
-            <Switch>
-              {getRoutes(routes)}
-    
-            </Switch>
+            <Switch>{getRoutes(routes)}</Switch>
           </Row>
         </Container>
       </div>
-      
     </>
   );
 };

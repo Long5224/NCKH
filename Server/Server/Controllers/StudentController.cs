@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using EmailService;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
@@ -21,23 +22,25 @@ namespace Server.Controllers
         private LinkGenerator _linkGenerator;
         private ILoggerManager _logger;
         private IMapper _mapper;
+        private IEmailSender _emailSender;
 
-        public StudentController(IRepositoryWrapper repository, LinkGenerator linkGenerator, ILoggerManager logger, IMapper mapper)
+        public StudentController(IRepositoryWrapper repository, LinkGenerator linkGenerator, ILoggerManager logger, IMapper mapper, IEmailSender emailSender)
         {
             _repository = repository;
             _linkGenerator = linkGenerator;
             _logger = logger;
             _mapper = mapper;
+            _emailSender = emailSender;
         }
 
 
         [HttpGet("{id}")]
         public IActionResult GetStudentById(long id)
         {
-            try
-            {
-                var student = _repository.Student.GetStudentById(id);
-                if (student == null)
+            var student = _repository.Student.GetStudentById(id);
+            var imageName = _repository.User.GetUserById(student.id).ImageName;
+            string imageSrc = string.Format("{0}://{1}{2}/Images/{3}", Request.Scheme, Request.Host, Request.PathBase, imageName);
+            if (student == null)
                 {
                     _logger.LogError($"Student with id: {id}, hasn't been found in db.");
                     return NotFound();
@@ -45,15 +48,12 @@ namespace Server.Controllers
                 else
                 {
                     _logger.LogInfo($"Returned student with id: {id}");
-                    var studentResult = _mapper.Map<StudentDTO>(student);
-                    return Ok(studentResult);
+                    var value = _mapper.Map<StudentDTO>(student);
+                    return Ok(new {
+                        value,
+                        imageSrc
+                    });
                 }
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError($"Something went wrong inside GetStudentById action: {ex.Message}");
-                return StatusCode(500, "Internal server error");
-            }
 
         }
       
@@ -287,8 +287,10 @@ namespace Server.Controllers
         {
             try
             {
-                var teacher = _repository.Teacher.GetTeacherByStudentId(id);
-                if (teacher == null)
+                var value = _repository.Teacher.GetTeacherByStudentId(id);
+                var imageName = _repository.User.GetUserById(value.id).ImageName;
+                string imageSrc = string.Format("{0}://{1}{2}/Images/{3}", Request.Scheme, Request.Host, Request.PathBase, imageName);
+                if (value == null)
                 {
                     _logger.LogError($"Teacher with student id: {id}, hasn't been found in db.");
                     return NotFound();
@@ -297,7 +299,10 @@ namespace Server.Controllers
                 {
                     _logger.LogInfo($"Returned teacher with student id: {id}");
 
-                    return Ok(teacher);
+                    return Ok(new {
+                        value,
+                        imageSrc
+                    });
                 }
             }
             catch (Exception ex)

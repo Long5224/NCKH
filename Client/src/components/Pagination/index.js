@@ -1,6 +1,6 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import ReactPaginate from 'react-paginate'
+import ReactPaginate from 'react-paginate'      
 function Pagination(props) {
     const {pageCount, onPageChange} = props
 
@@ -19,8 +19,8 @@ function Pagination(props) {
         previousLabel={<i className="fas fa-angle-left" />}
         nextLabel={<i className="fas fa-angle-right" />}
         breakLabel={"..."}
-        breakClassName={"page-item"}
-        breakLinkClassName={"page-link"}
+        pageClassName={"page-item"}
+        pageLinkClassName={"page-link"}
         pageCount={pageCount}
         onPageChange={changePage}
         containerClassName={"pagination justify-content-end mb-0"}

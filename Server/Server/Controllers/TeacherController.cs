@@ -12,7 +12,7 @@ using System.Threading.Tasks;
 
 namespace Server.Controllers
 {
-    [Route("api/teacher")]
+    [Route("api/teachers")]
     [ApiController]
     public class TeacherController : Controller
     {
@@ -43,8 +43,10 @@ namespace Server.Controllers
                 else
                 {
                     _logger.LogInfo($"Returned student with id: {id}");
-                    var teacherResult = _mapper.Map<TeacherDTO>(teacher);
-                    return Ok(teacherResult);
+                    var value = _mapper.Map<TeacherDTO>(teacher);
+                    return Ok(new {
+                        value,
+                    });
                 }
             }
             catch (Exception ex)
@@ -53,6 +55,46 @@ namespace Server.Controllers
                 return StatusCode(500, "Internal server error");
             }
         }
+
+        [HttpPut("{id}")]
+        public IActionResult UpdateTeacher(long id, [FromBody] StudentForUpdateDTO teacher)
+        {
+            try
+            {
+                if (teacher == null)
+                {
+                    _logger.LogError("Student object sent from client is null.");
+                    return BadRequest("Student object is null");
+                }
+
+                if (!ModelState.IsValid)
+                {
+                    _logger.LogError("Invalid Student object sent from client.");
+                    return BadRequest("Invalid Student object");
+                }
+
+                var _teacher = _repository.Teacher.GetTeacherById(id);
+                if (teacher == null)
+                {
+                    _logger.LogError($"Student with id: {id}, hasn't been found in db.");
+                    return NotFound();
+                }
+
+                _teacher.phoneNumber = teacher.phoneNumber;
+                _teacher.placeOfBirth = teacher.placeOfBirth;
+
+                _repository.Teacher.Update(_teacher);
+                _repository.Save();
+
+                return NoContent();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"Something went wrong inside UpdateStudent action: {ex.Message}");
+                return StatusCode(500, "Internal server error");
+            }
+        }
+
 
 
         [HttpGet("{teacherId}/students")]
@@ -78,6 +120,22 @@ namespace Server.Controllers
                 return StatusCode(500, "Internal server error");
             }
         }
+        [HttpGet("{teacherId}/statistics")]
+        public IActionResult GetStatistics(long teacherId)
+        {
+          
+                var statistics = _repository.StudyTime.GetStatistics(teacherId);
+                if (statistics == null)
+                {
+                    _logger.LogError($"Student with id: {teacherId}, hasn't been found in db.");
+                    return NotFound();
+                }
+                else
+                {
 
+                    return Ok(statistics);
+                }
+
+        }
     }
 }

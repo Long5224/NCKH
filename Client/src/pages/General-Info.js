@@ -1,10 +1,9 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import LocalService from "../apis/local.service";
 import moment from "moment";
 import { PATH } from "../constansts/API";
 import { useForm } from "react-hook-form";
 import AuthService from "../apis/auth.service"
-import jwt_decode from "jwt-decode";
 // reactstrap components
 import {
   Button,
@@ -20,87 +19,88 @@ import {
 } from "reactstrap";
 // core components
 import UserHeader from "../components/UserHeader/UserHeader";
+import UserContext from "../components/UserContext/UserContext";
 
 function Index() {
+  const {user, handleChangeUser, UpdateUser} = useContext(UserContext);
+  const id = user.username.split("-")[1];
+  const { register, handleSubmit } = useForm();
   const [infoUser, setInfoUser] = useState({
-    id: null,
-    firstName: "",
-    lastName: "",
-    dateOfBirth: "",
-    placeOfBirth: "",
-    phoneNumber: "",
-    gender: null,
-    yearOfAdmission: "",
-    classID: null,
-    class: {
+    value: {
       id: null,
-      name: "",
-      facultyId: null,
-      faculty: {
+      firstName: "",
+      lastName: "",
+      dateOfBirth: "",
+      placeOfBirth: "",
+      phoneNumber: "",
+      gender: true,
+      yearOfAdmission: "",
+      classID: null,
+      class: {
         id: null,
         name: "",
-      }
-    }
+        facultyID: null,
+        faculty: {
+          id: null,
+          name: "",
+        },
+      },
+    },
   });
-  const currentUser = AuthService.getCurrentUser();
-  const id = currentUser.username.split('-')[1]
-  const role = currentUser.role
-  const useName = currentUser.username
-  const { register,  formState: { errors } , handleSubmit } = useForm();
+
   useEffect(() => {
     async function getData() {
-      
-      if(role === "student" || role === "parent"){
-      const response = await LocalService.getById(
-        PATH.API_STUDENTS,
-        id
-      );
-      setInfoUser({...response.data})
-      console.log();
-      } else if (role === "teacher"){
-        const response = await LocalService.getById(
-          PATH.API_TEACHER,
-          id
-        );
-        setInfoUser({...response.data})
+      if (user.role === "parent") {
+        const response = await LocalService.getById(PATH.API_STUDENTS, id);
+        setInfoUser({ ...response.data });
+      } else {
+        const response = await LocalService.getById(PATH.API_TEACHER, id);
+        setInfoUser({ ...response.data });
       }
-      else {
-        const response = await LocalService.getById(
-          PATH.API_PARENT,
-          id
-        );
-        setInfoUser({...response.data.student})
-      }
-      
     }
     getData();
-  }, []);
+  }, [user.role, id]);
 
-  const saveInfo = (data) => {
-   
+  const  saveInfo = async (data) => {
+
     const updateData = {
-      placeOfBirth: infoUser.placeOfBirth,
-      phoneNumber: infoUser.phoneNumber,
+      placeOfBirth: infoUser.value.placeOfBirth,
+      phoneNumber: infoUser.value.phoneNumber,
     };
-    console.log(data)
-    
-    LocalService.update(PATH.API_STUDENTS, infoUser.id, JSON.stringify(updateData))
+
+    await UpdateUser(data.email)
+
+    await LocalService.update(
+      user.role === "parent" ? PATH.API_STUDENTS : PATH.API_TEACHER,
+      infoUser.value.id,
+      JSON.stringify(updateData))
       .then(() => {
         alert("Updated Success");
       })
       .catch((error) => {
-        alert("Mật khẩu chưa chính xác");
+        alert("UnSuccess");
       });
   };
 
   function handleChange(event) {
     const { name, value } = event.target;
-    setInfoUser({ ...infoUser, [name]: value });
-    console.log(infoUser);
+    if(name === "email"){
+      handleChangeUser(value, name);
+    }
+    setInfoUser({value: { ...infoUser.value, [name]: value}});
   }
+
+  const handleUpdateAvatar = (value, name) => {
+    handleChangeUser(value, name);
+  }
+
   return (
     <>
-      <UserHeader data={infoUser} page="general"/>
+      <UserHeader
+        data={{...infoUser, user: user}}
+        page="general"
+        onUpdateAvatar={handleUpdateAvatar}
+      />
       {/* Page content */}
       <Container className="mt--7">
         <Row>
@@ -131,15 +131,16 @@ function Index() {
                             className="form-control-label"
                             htmlFor="input-username"
                           >
-                            Tên người dùng
+                            Email
                           </label>
                           <Input
                             className="form-control-alternative"
-                            id="input-username"
-                            placeholder="Username"
+                            id="input-email"
+                            placeholder="Email"
                             type="text"
-                            disabled
-                            value={useName}
+                            value={user.email}
+                            {...register("email")}
+                            onChange={handleChange}
                           />
                         </FormGroup>
                       </Col>
@@ -155,13 +156,11 @@ function Index() {
                             className="form-control-alternative form-control"
                             id="input-phone"
                             placeholder="0123456789"
-                            value={infoUser.phoneNumber}
+                            value={infoUser.value.phoneNumber}
                             {...register("phoneNumber")}
                             type="text"
                             onChange={handleChange}
-                            
                           />
-                          
                         </FormGroup>
                       </Col>
                     </Row>
@@ -178,7 +177,7 @@ function Index() {
                             className="form-control-alternative"
                             id="input-first-name"
                             placeholder="First name"
-                            value={infoUser.firstName}
+                            value={infoUser.value.firstName}
                             type="text"
                             disabled
                           />
@@ -196,7 +195,7 @@ function Index() {
                             className="form-control-alternative"
                             id="input-last-name"
                             placeholder="Last name"
-                            value={infoUser.lastName}
+                            value={infoUser.value.lastName}
                             type="text"
                             disabled
                           />
@@ -222,7 +221,7 @@ function Index() {
                           <Input
                             className="form-control-alternative"
                             id="input-studentId"
-                            value={infoUser.id}
+                            value={infoUser.value.id}
                             type="text"
                             disabled
                           />
@@ -239,7 +238,7 @@ function Index() {
                           <Input
                             className="form-control-alternative"
                             id="input-dateOfBirth"
-                            value={infoUser.dateOfBirth}
+                            value={infoUser.value.dateOfBirth}
                             type="date"
                             disabled
                           />
@@ -258,7 +257,7 @@ function Index() {
                             id="input-faculty"
                             type="text"
                             value={
-                              parseInt(infoUser.yearOfAdmission) -
+                              parseInt(infoUser.value.yearOfAdmission) -
                               parseInt(moment("1959").get("year"))
                             }
                             disabled
@@ -278,7 +277,7 @@ function Index() {
                           <Input
                             id="input-gender"
                             type="text"
-                            value={infoUser.class.faculty.name}
+                            value={infoUser.value.class.faculty.name}
                             disabled
                           ></Input>
                         </FormGroup>
@@ -294,7 +293,7 @@ function Index() {
                           <Input
                             id="input-faculty"
                             type="text"
-                            value={infoUser.class.name}
+                            value={infoUser.value.class.name}
                             disabled
                           />
                         </FormGroup>
@@ -310,7 +309,9 @@ function Index() {
                           <Input
                             id="input-gender"
                             type="text"
-                            value={infoUser.gender === true ? "Nam" : "Nữ"}
+                            value={
+                              infoUser.value.gender === true ? "Nam" : "Nữ"
+                            }
                             disabled
                           />
                         </FormGroup>
@@ -337,9 +338,8 @@ function Index() {
                             id="input-placeOfBirth"
                             type="text"
                             {...register("placeOfBirth")}
-                            value={infoUser.placeOfBirth}
+                            value={infoUser.value.placeOfBirth}
                             onChange={handleChange}
-                         
                           />
                         </FormGroup>
                       </Col>
@@ -357,7 +357,7 @@ function Index() {
                             className="form-control-alternative"
                             id="input-city"
                             type="text"
-                            value={infoUser.placeOfBirth.split("-")[0]}
+                            value={infoUser.value.placeOfBirth.split("-")[0]}
                             disabled
                           ></Input>
                         </FormGroup>
@@ -374,7 +374,7 @@ function Index() {
                             className="form-control-alternative"
                             id="input-district"
                             type="text"
-                            value={infoUser.placeOfBirth.split("-")[1]}
+                            value={infoUser.value.placeOfBirth.split("-")[1]}
                             disabled
                           />
                         </FormGroup>
@@ -391,7 +391,7 @@ function Index() {
                             className="form-control-alternative"
                             id="input-ward"
                             type="text"
-                            value={infoUser.placeOfBirth.split("-")[2]}
+                            value={infoUser.value.placeOfBirth.split("-")[2]}
                             disabled
                           />
                         </FormGroup>

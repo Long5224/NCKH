@@ -9,10 +9,14 @@ import ChangePassword from "../pages/ChangePassword";
 import LoginPage from "../pages/Login";
 import Students from "../pages/Students"
 import Message from "../pages/Message"
-import Tuition from "../pages/Tuition"
+import Statistics from "../pages/Statistics";
+import ForgotPassword from "../pages/ForgotPassword";
+import ResetPassword from "../pages/ResetPassword";
+import ForgotPasswordConFirmation from "../pages/ForgotPasswordConFirmation";
+import ResetPasswordSuccess from "../pages/ResetPasswordSuccess";
 var routes = [
   {
-    path: "/index",
+    path: "/general",
     name: "Thông tin chung",
     icon: "fas fa-home text-primary",
     component: Index,
@@ -40,6 +44,14 @@ var routes = [
     name: "Danh sách sinh viên",
     icon: "fas fa-list-ol text-primary",
     component: Students,
+    layout: "/home",
+    role: ["teacher"]
+  },
+  {
+    path: "/statistics",
+    name: "Thống kê phổ điểm",
+    icon: "fas fa-chart-bar text-primary",
+    component: Statistics,
     layout: "/home",
     role: ["teacher"]
   },
@@ -93,14 +105,47 @@ var routes = [
     role: ["student", "teacher", "parent"]
 
   },
-
-
   {
-    path: "/",
+    path: "/login",
     name: "Đăng nhập",
     icon: "fas fa-sign-out-alt text-primary",
     component: LoginPage,
-    layout: "/login",
+    layout: "/auth",
+    role: ["none"]
+  },
+  {
+    path: "/forgot",
+    name: "Quên mật khẩu",
+    icon: "fas fa-sign-out-alt text-primary",
+    component: ForgotPassword,
+    layout: "/auth",
+    role: ["none"]
+  },
+
+  {
+    path: "/reset",
+    name: "Đặt lại mật khẩu",
+    icon: "fas fa-sign-out-alt text-primary",
+    component: ResetPassword,
+    layout: "/auth",
+    role: ["none"]
+  },
+
+  {
+    path: "/forgotpasswordconfirmation",
+    name: "Xác nhận quên mật khẩu",
+    icon: "fas fa-sign-out-alt text-primary",
+    component: ForgotPasswordConFirmation,
+    layout: "/auth",
+    role: ["none"]
+  },
+
+  {
+    path: "/resetpasswordsuccess",
+    name: "Thay đổi mật khẩu thành công",
+    icon: "fas fa-sign-out-alt text-primary",
+    component: ResetPasswordSuccess,
+    layout: "/auth",
     role: ["none"]
   },
 ];

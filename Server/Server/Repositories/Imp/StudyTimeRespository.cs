@@ -1,4 +1,5 @@
-﻿using Server.DTO;
+﻿using Microsoft.EntityFrameworkCore;
+using Server.DTO;
 using Server.Helper;
 using Server.Models;
 using Server.Models.Entities;
@@ -146,6 +147,90 @@ namespace Server.Repositories.Imp
             }
             return result;
         }
+
+        public List<Statistics> GetStatistics(long teacherId)
+        {
+            //get class by teacher id
+            long classId = RespositoryContext.Teachers.Find(teacherId).classID;
+            List<Student> studentsOfClass = RespositoryContext.Class.Where(x => x.id.Equals(classId))
+                .Include(x => x.Students).FirstOrDefault().Students.ToList();
+            List<Semester> semesters = findSemester(studentsOfClass[0].id);
+            List<Statistics> result = new List<Statistics>();
+            foreach(Semester sm in semesters)
+            {
+                int index = semesters.IndexOf(sm);
+                // phổ điểm của 1 kì
+                List<ScoreSheet> _scores = createScoresSheet();
+
+                foreach (Student st in studentsOfClass)
+                {
+                    // điểm của các kì của 1 học sinh
+                    List<SemesterDTO> _listScores = GetResultOfAverageSemesterByStudentId(st.id);
+
+                    //điểm của kì hiện tại
+                    double score = _listScores[index].totalByTen;
+                    
+                    for (int j = 0; j < 9; j++)
+                    {
+                        if (score > j && score < j + 1)
+                        {
+                            _scores[j].amount++;
+                        }
+                    }
+                }
+                string semester = String.Format("{0}_{1}_{2}", sm.begin_year, sm.end_year, sm.times);
+                Statistics subResult = new Statistics(sm.id, semester, _scores);
+                result.Add(subResult);
+            }
+
+            return result;
+        }
+
+        public List<Semester> findSemester(long id)
+        {
+            //Tim ngay nhap hoc cua hoc sinh
+            Student student = RespositoryContext.Student.Find(id);
+            string yearOfAdmission = student.yearOfAdmission;
+
+            //ket qua
+            List<Semester> result = new List<Semester>();
+            // dem theo nam hoc
+            int j = 0;
+            // dem ki hoc
+            int x = 1;
+            for(int i = 0; i < 7; i++)
+            {
+                string schoolYear = (Int32.Parse(yearOfAdmission) + j).ToString();
+                Semester semester = null;
+                if(x == 1)
+                {
+                    semester = RespositoryContext.Semester.Where(x => x.begin_year.Equals(schoolYear)).FirstOrDefault();
+                    x++;
+
+                }
+                else // neu ki hien tai la ki 2 thi moi tang bien dem nam hoc
+                {
+                    semester = RespositoryContext.Semester.Where(x => x.begin_year.Equals(schoolYear) && x.times.Equals(2)).FirstOrDefault();
+                    j++;
+                    x = 1;
+                }
+                result.Add(semester);
+            }
+            return result;
+        }
+
+        //hàm tạo khung phổ điểm
+        public List<ScoreSheet> createScoresSheet()
+        {
+            List<ScoreSheet> scoreSheets = new List<ScoreSheet>();
+            for(int i = 0; i <= 9; i++)
+            {
+                scoreSheets.Add(new ScoreSheet(String.Format("{0}-{1}", i, i + 1), 0));
+            }
+            return scoreSheets;
+        }
+
+        
 
         public Dictionary<string, List<CourseClassDTO>> GetStudySchedule(long studentId)
         {

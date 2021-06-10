@@ -7,15 +7,10 @@ import {
   Card,
   CardHeader,
   CardFooter,
-  Media,
   Table,
   Container,
   Row,
-  Form,
-  FormGroup,
-  Badge,
 } from "reactstrap";
-import moment from "moment";
 
 function Study_Schedule(props) {
   const [courseClasses, setCourseClasses] = useState({
@@ -37,7 +32,7 @@ function Study_Schedule(props) {
       console.log(response.data);
     }
     getData();
-  }, []);
+  }, [id]);
 
   return (
     <>

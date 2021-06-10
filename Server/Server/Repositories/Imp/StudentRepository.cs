@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Server.DTO;
 using Server.Helper;
 using Server.Models;
 using System;
@@ -13,6 +14,7 @@ namespace Server.Repositories.Imp
     {
         private IDataShaper<Student> _dataShaper;
 
+
         public StudentRepository(NCKH_DBContext repositoryContext, IDataShaper<Student> dataShaper)
            : base(repositoryContext)
         {
@@ -21,11 +23,12 @@ namespace Server.Repositories.Imp
 
         public Student GetStudentById(long studentId)
         {
-            return FindByCondition(st => st.id.Equals(studentId))
+            Student student = FindByCondition(st => st.id.Equals(studentId))
                 .Include(st => st.Class)
                 .ThenInclude(cl => cl.Faculty)
                 .OrderBy(st => st.id)
                 .FirstOrDefault();
+            return student;
         }
 
         public ShapedEntity GetStudentById(long classId, long studentId, string fields)

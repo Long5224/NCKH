@@ -21,5 +21,7 @@ namespace Server.Models.Entities
         public Role Role { get; set; }
 
         public string ImageName { get; set; }
+
+        public string Email { get; set; }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using Server.DTO;
+using Server.Helper;
 using Server.Models.Entities;
 using System;
 using System.Collections.Generic;
@@ -16,5 +17,7 @@ namespace Server.Repositories
         Dictionary<string, List<CourseClassDTO>> GetStudySchedule(long studentId);
 
         List<ExamDTO> GetExam_Schedules(long studentId);
+
+        List<Statistics> GetStatistics(long teacherId);
     }
 }

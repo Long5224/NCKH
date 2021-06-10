@@ -1,11 +1,11 @@
 import axios from "axios";
 
-const API_URL = "http://localhost:5000/api/auth/";
+const API_PATH = "http://localhost:5000/api/auth/";
 
 
 const login = (username, password) => {
   return axios
-    .post(API_URL + "login", {
+    .post(API_PATH + "login", {
       username,
       password,
     })
@@ -17,8 +17,25 @@ const login = (username, password) => {
     });
 };
 
-const update = (data) => {
-  return axios.put(API_URL + "repassword", data);
+const update = (data, url) => {
+  return axios.put(`${API_PATH}${url}`, data);
+}
+
+const create = (data, url) => {
+  return axios.post(`${API_PATH}${url}`, data)
+}
+
+function getByUserName(id) {
+  return new Promise((resolve, reject) =>{
+      axios.get(`${API_PATH}${id}`)
+      .then(res =>{
+          resolve(res);
+      })
+  })
+}
+
+const get = (username) => {
+  return axios.get(`${API_PATH}${username}`);
 }
 
 const getCurrentUser = () => {
@@ -43,5 +60,8 @@ export default {
     getCurrentUserUserName,
     getCurrentUserRole,
     update,
-    logout
+    getByUserName,
+    logout,
+    create,
+    get
   };

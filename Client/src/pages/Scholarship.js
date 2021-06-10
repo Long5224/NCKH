@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, {  useEffect } from "react";
 import Header from "../components/UserHeader/Header";
 import Local from "../apis/local.service";
 import AuthService from "../apis/auth.service";
@@ -7,15 +7,12 @@ import {
   Card,
   CardHeader,
   CardFooter,
-  Media,
+
   Table,
   Container,
   Row,
-  Form,
-  FormGroup,
-  Badge,
+
 } from "reactstrap";
-import moment from "moment";
 
 function Scholarship(props) {
     const [generals, setGenerals] = React.useState([])
@@ -27,7 +24,7 @@ function Scholarship(props) {
    setGenerals(response.data);
     }
     getData();
-  }, []);
+  }, [id]);
 
   return (
     <>

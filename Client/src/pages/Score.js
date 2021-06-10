@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import Header from "../components/UserHeader/Header";
 import FilterDropDown from "../components/Filter/FilterDropDown/index";
-import FilterForScore from"../components/Filter/FilterDropDown/filterForScore"
+import FilterForScore from "../components/Filter/FilterDropDown/filterForScore";
 import Pagination from "../components/Pagination/index";
 import SearchFilter from "../components/Filter/Search/index";
 import { PATH } from "../constansts/API";
@@ -20,21 +20,18 @@ import {
   FormGroup,
   Label,
 } from "reactstrap";
-import { data } from "jquery";
-// core components
 
 const Score = () => {
   const dataPerPage = 10;
   const [pagesVisited, setPagesVisited] = useState(0);
   const [pageCount, setPageCount] = useState(1);
   const [formValues, setFormValues] = useState({
-    search: "",
-    select: "",
+    searched: "",
+    scoreFilter: "all",
+    semesterFilter: "all",
   });
   const [scores, setScores] = useState([]);
   const [totalScores, setTotalSCore] = useState([]);
-  const [filter, setFilter] = useState("all");
-  const [currentSemesterId, setCurrentSemesterId] = useState("");
   const currentUser = AuthService.getCurrentUser();
   const id = currentUser.username.split("-")[1];
   useEffect(() => {
@@ -51,57 +48,40 @@ const Score = () => {
       );
       setScores(responseScore.data);
       setTotalSCore(responseTotalScores.data);
-      console.log(responseTotalScores.data);
+      console.log(responseScore);
       setPageCount(Math.ceil(responseScore.data.length / dataPerPage));
     }
     getData();
-  }, []);
+  }, [id]);
 
   function handleOnChange(val) {
     setFormValues({ ...formValues, [val.name]: val.value });
     setPagesVisited(0);
-    if (val.name == "select") {
-      if (val.value === "all") {
-        setPageCount(scores.length / dataPerPage);
-        setCurrentSemesterId("");
-        return;
-      } else {
-        setCurrentSemesterId(val.value);
-        const count = scores.filter((values) => {
-          if (values.semesterId == val.value) {
-            return val;
-          }
-        }).length;
-        setPageCount(Math.ceil(count / dataPerPage));
-      }
-    }
-  }
-
-  function handleOnChangeFilterScore(data) {
-    setFilter(data.value)
-    console.log(data.value)
   }
 
   const displayData = scores
     .filter((val) => {
-      if (val.results.evaluation == filter) {
+      if (val.semesterId === Number(formValues.semesterFilter)) {
         return val;
-      } else if (filter == "all") {
-        return val;
-      }
+      } else if (formValues.semesterFilter === "all") {
+        return val
+      } 
     })
     .filter((val) => {
-      if (val.semesterId == currentSemesterId) {
+      if (val.results.evaluation === formValues.scoreFilter) {
         return val;
-      } else if (currentSemesterId === "") {
+      } else if (formValues.scoreFilter === "all") {
         return val;
+      } else {
+        return;
       }
     })
+
     .filter((val) => {
-      if (formValues.search === "") {
+      if (formValues.searched === "") {
         return val;
       } else if (
-        val.course.toLowerCase().includes(formValues.search.toLowerCase())
+        val.course.toLowerCase().includes(formValues.searched.toLowerCase())
       ) {
         return val;
       }
@@ -118,7 +98,9 @@ const Score = () => {
           <td>{data.results.mark_process}</td>
           <td>{data.results.mark_exam}</td>
           <td>
-            {parseFloat(data.results.mark_process * 0.3 + data.results.mark_exam * 0.7).toFixed(2)}
+            {parseFloat(
+              data.results.mark_process * 0.3 + data.results.mark_exam * 0.7
+            ).toFixed(2)}
           </td>
           <td>{data.results.evaluation}</td>
           <td>{data.times}</td>
@@ -180,7 +162,7 @@ const Score = () => {
                             </span>
                           </Media>
                         </th>
-                        <td>{data.times == "3" ? "Cả năm" : data.times}</td>
+                        <td>{data.times === "3" ? "Cả năm" : data.times}</td>
                         <td>{data.totalByTen}</td>
                         <td>{data.totalByFour}</td>
                         <td>{data.tinchi}</td>
@@ -210,16 +192,14 @@ const Score = () => {
                     <FilterDropDown
                       onChange={handleOnChange}
                       page="score"
-                      currentSelected={currentSemesterId}
+                      id={id}
                     />
                   </FormGroup>
                   <FormGroup className="mb-0 ml-7 d-flex align-items-center">
                     <Label for="input-From_dateOfBirth" className="mr-1 mb-0">
                       Lọc:
                     </Label>
-                    <FilterForScore
-                      onChange={handleOnChangeFilterScore}
-                    />
+                    <FilterForScore onChange={handleOnChange} />
                   </FormGroup>
                   <FormGroup className=" mb-0 ml-auto edit-form-group">
                     <SearchFilter onChange={handleOnChange} />
@@ -264,8 +244,6 @@ const Score = () => {
             </Card>
           </div>
         </Row>
-
-        
       </Container>
     </>
   );

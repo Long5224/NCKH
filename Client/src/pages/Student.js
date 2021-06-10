@@ -4,27 +4,32 @@ import {PATH} from "../constansts/API"
 // core components
 import UserHeader from "../components/UserHeader/UserHeader";
 import { useParams } from "react-router-dom";
+import authService from "../apis/auth.service";
 const Student = (props) => {
+  const user = authService.getCurrentUser();
   let { studentId } = useParams();
   const [infoStudent, setInfoStudent] = useState({
-    id: null,
-    firstName: "",
-    lastName: "",
-    dateOfBirth: "",
-    placeOfBirth: "",
-    phoneNumber: "",
-    gender: true,
-    yearOfAdmission: "",
-    classID: null,
-    class: {
-      faculty: {
-        id: null,
-        name: ""
-      },
-      facultyId: null,
+    value: {
       id: null,
-      name: ""
-    }
+      firstName: "",
+      lastName: "",
+      dateOfBirth: "",
+      placeOfBirth: "",
+      phoneNumber: "",
+      gender: true,
+      yearOfAdmission: "",
+      classID: null,
+      class: {
+        id: null,
+        name: "",
+        facultyID: null,
+        faculty: {
+          id: null,
+          name: "",
+        },
+      },
+    },
+    imageSrc: ""
   });
   
   useEffect(() => {

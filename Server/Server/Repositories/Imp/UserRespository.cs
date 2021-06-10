@@ -23,9 +23,28 @@ namespace Server.Repositories.Imp
                 .FirstOrDefault();
         }
 
+        public User GetUserByEmail(string email)
+        {
+            return FindByCondition(us => us.Email.Equals(email)).FirstOrDefault();
+        }
+
+        public User GetUserById(long id)
+        {
+            List<User> listUsers = FindAll().ToList();
+
+            foreach(User item in listUsers)
+            {
+                if (item.username.Split("-")[1].Equals(id.ToString()))
+                {
+                    return item;
+                }
+            }
+            return null;
+        }
+
         public User GetUserByUserName(string userName)
         {
-            return FindByCondition(us => us.username.Equals(userName)).FirstOrDefault();
+            return FindByCondition(us => us.username.Equals(userName)).Include(us => us.Role).FirstOrDefault();
         }
     }
 }

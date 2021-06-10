@@ -8,14 +8,7 @@ import {
   Card,
   CardHeader,
   CardFooter,
-  DropdownMenu,
-  DropdownItem,
-  UncontrolledDropdown,
-  DropdownToggle,
   Media,
-  Pagination,
-  PaginationItem,
-  PaginationLink,
   Table,
   Container,
   Row,
@@ -42,7 +35,7 @@ function Test(props) {
       console.log(response)
     }
     getData()
-  }, []);
+  }, [id]);
   return (
     <>
       {/*Header */}

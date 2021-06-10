@@ -1,22 +1,6 @@
-/*!
-
-=========================================================
-* Argon Dashboard React - v1.2.0
-=========================================================
-
-* Product Page: https://www.creative-tim.com/product/argon-dashboard-react
-* Copyright 2021 Creative Tim (https://www.creative-tim.com)
-* Licensed under MIT (https://github.com/creativetimofficial/argon-dashboard-react/blob/master/LICENSE.md)
-
-* Coded by Creative Tim
-
-=========================================================
-
-* The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
-
-*/
 import React from "react";
 import { Link } from "react-router-dom";
+import AuthService from "../../apis/auth.service"
 // reactstrap components
 import {
   DropdownMenu,
@@ -30,6 +14,10 @@ import {
 } from "reactstrap";
 
 const MainNavbar = (props) => {
+  const { user } = props;
+  function handleLogout() {
+    AuthService.logout();
+  }
   return (
     <>
       <Navbar className="navbar-top navbar-dark" expand="md" id="navbar-main">
@@ -47,15 +35,12 @@ const MainNavbar = (props) => {
                   <span className="avatar avatar-sm rounded-circle">
                     <img
                       alt="..."
-                      src={
-                        require("../../assets/images/User_Img.png")
-                          .default
-                      }
+                      src={user.imageSrc}
                     />
                   </span>
                   <Media className="ml-2 d-none d-lg-block">
                     <span className="mb-0 text-sm font-weight-bold">
-                      Phạm Hoàng Long
+                      {user.username}
                     </span>
                   </Media>
                 </Media>
@@ -64,24 +49,15 @@ const MainNavbar = (props) => {
                 <DropdownItem className="noti-title" header tag="div">
                   <h6 className="text-overflow m-0">Welcome!</h6>
                 </DropdownItem>
-                <DropdownItem to="/admin/user-profile" tag={Link}>
+                <DropdownItem to="/home/general" tag={Link}>
                   <i className="ni ni-single-02" />
                   <span>Thông tin cá nhân</span>
                 </DropdownItem>
-                <DropdownItem to="/admin/user-profile" tag={Link}>
+                <DropdownItem to="/home/notification" tag={Link}>
                   <i className="ni ni-settings-gear-65" />
-                  <span>Cài đặt</span>
+                  <span>Thông báo</span>
                 </DropdownItem>
-                <DropdownItem to="/admin/user-profile" tag={Link}>
-                  <i className="ni ni-calendar-grid-58" />
-                  <span>Hoạt động</span>
-                </DropdownItem>
-                <DropdownItem to="/admin/user-profile" tag={Link}>
-                  <i className="ni ni-support-16" />
-                  <span>Hỗ trợ</span>
-                </DropdownItem>
-                <DropdownItem divider />
-                <DropdownItem href="#pablo" onClick={(e) => e.preventDefault()}>
+                <DropdownItem to="/login" tag={Link} onClick={handleLogout}>
                   <i className="ni ni-user-run" />
                   <span>Đăng xuất</span>
                 </DropdownItem>

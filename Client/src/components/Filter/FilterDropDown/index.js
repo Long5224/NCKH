@@ -2,12 +2,9 @@ import React, {useEffect, useState} from "react";
 import { Input } from "reactstrap";
 import {PATH} from '../../../constansts/API'
 import LocalService from '../../../apis/local.service'
-import AuthService from  "../../../apis/auth.service"
 function FilterDropDown(props) {
-  const {  onChange, page, currentSelected } = props;
+  const {  onChange, page, id } = props;
   const [evaluations, setEvaluations] = useState([]);
-  const currentUser = AuthService.getCurrentUser();
-  const id = currentUser.username.split('-')[1]
   useEffect(() => {
     async function getData() {
       const responseEvaluation = await LocalService.getChildrenById(
@@ -19,7 +16,7 @@ function FilterDropDown(props) {
       console.log(responseEvaluation);
     }
     getData();
-  }, []);
+  }, [id]);
 
   function handleOnChange(event) {
     onChange(event.target);
@@ -27,9 +24,8 @@ function FilterDropDown(props) {
   return (
     <Input
       type="select"
-      name="select"
+      name="semesterFilter"
       id="exampleSelect"
-      value={currentSelected}
       className="form-control-alternative"
       onChange={handleOnChange}
     >

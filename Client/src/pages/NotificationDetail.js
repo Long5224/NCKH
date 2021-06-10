@@ -11,7 +11,7 @@ export default function NotificationDetail(props) {
           console.log(response)
       }
       getData()
-  }, [])
+  }, [notificationId])
   return (
       <>
       <h1>{notification.header}</h1>

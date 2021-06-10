@@ -12,8 +12,6 @@ using System.Threading.Tasks;
 namespace Server.Controllers
 {
     [Route("api/faculties")]
-    [ApiController]
-    [Authorize(Roles = "student, parents    , teacher")]
     public class FacultyController : Controller
     {
         private IRepositoryWrapper _repository;

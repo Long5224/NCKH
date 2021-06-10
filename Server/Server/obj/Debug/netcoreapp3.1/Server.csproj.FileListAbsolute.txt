@@ -166,3 +166,9 @@ F:\nckh\NCKH\Server\Server\bin\Debug\netcoreapp3.1\runtimes\win-x86\native\Micro
 F:\nckh\NCKH\Server\Server\bin\Debug\netcoreapp3.1\runtimes\linux-mips64\native\libe_sqlite3.so
 F:\nckh\NCKH\Server\Server\bin\Debug\netcoreapp3.1\runtimes\win\lib\netstandard2.0\System.Runtime.Caching.dll
 F:\nckh\NCKH\Server\Server\bin\Debug\netcoreapp3.1\Microsoft.AspNetCore.Authentication.JwtBearer.dll
+F:\nckh\NCKH\Server\Server\bin\Debug\netcoreapp3.1\MailKit.dll
+F:\nckh\NCKH\Server\Server\bin\Debug\netcoreapp3.1\MimeKit.dll
+F:\nckh\NCKH\Server\Server\bin\Debug\netcoreapp3.1\NETCore.MailKit.dll
+F:\nckh\NCKH\Server\Server\bin\Debug\netcoreapp3.1\BouncyCastle.Crypto.dll
+F:\nckh\NCKH\Server\Server\bin\Debug\netcoreapp3.1\EmailService.dll
+F:\nckh\NCKH\Server\Server\bin\Debug\netcoreapp3.1\EmailService.pdb

@@ -27,7 +27,7 @@ namespace Server.Repositories.Imp
                 .FirstOrDefault();
         }
 
-        public IEnumerable<Teacher> GetTeacherByStudentId(long studentId)
+        public Teacher GetTeacherByStudentId(long studentId)
         {
             var teacher = RespositoryContext.Teachers
                 .FromSqlRaw(@"select teacher.id, teacher.firstName, teacher.lastName, teacher.dateOfBirth, 
@@ -36,7 +36,7 @@ namespace Server.Repositories.Imp
                             inner join class on teacher.Classid = class.id
                             inner join student on class.id = student.classID
                             where student.id = {0}", studentId)
-                .OrderBy(tc => tc.id);
+                .FirstOrDefault();
             return teacher;
         }
     }

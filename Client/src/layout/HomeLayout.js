@@ -6,17 +6,24 @@ import Navbar from "../components/Navbar/Navbar";
 import { Container } from "reactstrap";
 import Footer from "../components/Footer/Footer";
 import AuthService from "../apis/auth.service";
+import { UserProvider } from "../components/UserContext/UserContext";
+
+
 function HomeLayout(props) {
   const mainContent = React.useRef(null);
   const location = useLocation();
   const [currentRoutes, setCurrentRoutes] = useState([]);
+  const [user, setUser] = React.useState(AuthService.getCurrentUser());
+ 
   useEffect(() => {
     async function getData() {
       const routesResult = routes.filter((prop) => {
-        if (prop.role.includes(currentUserRole) === true) {
+        if (prop.role.includes(user.role) === true) {
           return prop;
         }
       });
+      const response = await AuthService.get(user.username);
+      setUser({...response.data});
       setCurrentRoutes(routesResult);
       document.documentElement.scrollTop = 0;
       document.scrollingElement.scrollTop = 0;
@@ -24,7 +31,8 @@ function HomeLayout(props) {
     }
     getData();
   }, [location]);
-  const currentUserRole = AuthService.getCurrentUser().role;
+
+  
   const getRoutes = () => {
     return currentRoutes.map((prop, key) => {
       return (
@@ -48,8 +56,26 @@ function HomeLayout(props) {
     }
     return "Brand";
   };
+
+  const handleChangeUser = (value, name) => {
+    setUser({...user, [name]: value});
+  }
+
+  const UpdateUser = () => {
+    const data = {
+      username: user.username,
+      email: user.email
+    }
+    AuthService.update(data, "email")
+    .then((res) => {
+      console.log(res);
+      setUser({...user, email: data.email});
+    })
+    .catch((error) => console.error(error));
+  }
+
   return (
-    <>
+    <UserProvider value={{user, handleChangeUser, UpdateUser}}>
       <Sidebar
         className="custom-sidebar"
         {...props}
@@ -61,17 +87,17 @@ function HomeLayout(props) {
         }}
       />
       <div className="main-content" ref={mainContent}>
-        <Navbar {...props} brandText={getBrandText(props.location.pathname)} />
+        <Navbar  brandText={getBrandText(props.location.pathname)} user={user} />
         <Switch>
           {getRoutes(routes)}
-          <Redirect exact from="/" to="/home/index" />
+          <Redirect from="/" to="/home/general" />
         </Switch>
         {/*Footer */}
         <Container>
           <Footer />
         </Container>
       </div>
-    </>
+    </UserProvider>
   );
 }
 export default HomeLayout;

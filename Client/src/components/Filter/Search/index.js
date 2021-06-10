@@ -25,7 +25,7 @@ function Search(props) {
           <i className="ni ni-zoom-split-in" />
         </InputGroupText>
       </InputGroupAddon>
-      <Input placeholder="Search" name="search" type="text" onChange={handleOnChange} />
+      <Input placeholder="Search" name="searched" type="text" onChange={handleOnChange} />
     </InputGroup>
   );
 }

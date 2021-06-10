@@ -1,8 +1,5 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { Input } from "reactstrap";
-import { PATH } from "../../../constansts/API";
-import LocalService from "../../../apis/local.service";
-import AuthService from "../../../apis/auth.service";
 function FilterForScore(props) {
     const {onChange} = props;
   function handleOnChange(event) {
@@ -11,7 +8,7 @@ function FilterForScore(props) {
   return (
     <Input
       type="select"
-      name="select"
+      name="scoreFilter"
       id="exampleSelect"
       className="form-control-alternative"
       onChange={handleOnChange}

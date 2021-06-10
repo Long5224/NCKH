@@ -12,5 +12,9 @@ namespace Server.Repositories
         User GetUser(UserDTO user);
 
         User GetUserByUserName(string userName);
+
+        User GetUserById(long id);
+
+        User GetUserByEmail(string email);
     }
 }

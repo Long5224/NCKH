@@ -8,7 +8,7 @@ namespace Server.Repositories
 {
     public interface ITeacherRespository : IRepositoryBase<Teacher>
     {
-        IEnumerable<Teacher>  GetTeacherByStudentId(long studentId);
+        Teacher  GetTeacherByStudentId(long studentId);
 
         Teacher GetTeacherById(long teacherId);
     }
