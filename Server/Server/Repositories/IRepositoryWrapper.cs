@@ -33,6 +33,8 @@ namespace Server.Repositories.Imp
         IGeneralRespository General { get; }
 
         INotificationRepository Notification { get; }
+
+        IMessageRepository Message { get; }
         void Save();
     }
 }

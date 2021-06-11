@@ -2,9 +2,10 @@ import React from "react";
 import Header from "../components/UserHeader/Header";
 import { Link, Switch, useRouteMatch, Route } from "react-router-dom";
 import AddNotification from "./AddNotification"
+import NotificationDetail from "./NotificationDetail"
+import * as signalR from "@microsoft/signalr";
 import AuthService from "../apis/auth.service";
 import LocalService from "../apis/local.service"
-import NotificationDetail from "./NotificationDetail";
 // reactstrap components
 import {
   Card,
@@ -17,6 +18,7 @@ import {
   Row,
   CardBody,
   ListGroup,
+  ListGroupItem,
   Form,
   FormGroup,
   InputGroup,
@@ -24,19 +26,30 @@ import {
   InputGroupAddon,
   InputGroupText,
 } from "reactstrap";
+import { data } from "jquery";
 function Notification(props) {
-  let { path, url } = useRouteMatch();
   const [notifications, setNotifications] = React.useState([]);
+  const [classId, setClassId] = React.useState(null)
+  const [isAdd, setIsAdd] = React.useState(false);
   const currentUser = AuthService.getCurrentUser();
   const userName = currentUser.username;
   React.useEffect(() => {
     async function getData() {
       const response = await LocalService.getById("notification/username", userName);
-      setNotifications(response.data);
+      setNotifications(response.data.notifications);
+      setClassId(response.data.classId)
+      setIsAdd(false);
       console.log(response)
     }
     getData();
-  }, [userName])
+  }, [isAdd])
+
+  const handleAdd = (value) => {
+    setIsAdd(value);
+  }
+
+  const currentUserRole = currentUser.role;  
+  let { path, url } = useRouteMatch();
   return (
     <>
       {/*Header */}
@@ -52,12 +65,14 @@ function Notification(props) {
                 <Card className="shadow">
                   <CardHeader className="border-1 d-flex flex-row">
                     <h3 className="mb-0">Thông báo</h3>
-                    <Link
-                      className="ml-auto btn-add-notification"
-                      to={`${url}/add`}
-                    >
-                      <i class="fas fa-plus"></i>
-                    </Link>
+                    {currentUserRole ==="teacher" && 
+                      <Link
+                        className="ml-auto btn-add-notification"
+                        to={`${url}/add`}
+                      >
+                        <i class="fas fa-plus"></i>
+                      </Link>
+                    }
                   </CardHeader>
                   <CardBody className="pt-1">
                     <Form className="">
@@ -75,9 +90,9 @@ function Notification(props) {
                       </div>
                     </Form>
                     <hr className="m-0" />
-                    <ListGroup className="list-group-flush list ">
+                    <ListGroup id="notificationList" className="list-group-flush list ">
                      
-                     {notifications.map((item, index) => {
+                        {notifications.map((item, index) => {
                        return (
                         <Link
                         className=" list-group-item-action px-0"
@@ -88,6 +103,8 @@ function Notification(props) {
                       </Link>
                        )
                      })}
+                  
+                      
                     </ListGroup>
                   </CardBody>
 
@@ -146,7 +163,7 @@ function Notification(props) {
                 </Card>
               </Route>
               <Route exact path={`${path}/add`}>
-                <AddNotification />
+                <AddNotification classId={classId} addNotification={handleAdd}/>
               </Route>
               <Route path={`${path}/:notificationId`}>
                 <NotificationDetail/>

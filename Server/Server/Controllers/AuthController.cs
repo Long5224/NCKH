@@ -59,6 +59,7 @@ namespace Server.Controllers
             { 
                 var claims = new List<Claim>
                 {
+                    new Claim(ClaimTypes.NameIdentifier,us.id.ToString()),
                     new Claim(ClaimTypes.Name, us.username),
                     new Claim(ClaimTypes.Role, us.Role.code)
                 };
@@ -158,7 +159,7 @@ namespace Server.Controllers
             //create http request with get type and parameters
             //string address = String.Format("http://localhost:5000/api/auth/resetpassword?email={0}&token={1}", user.Email, token);
             string address = String.Format("http://localhost:3000/auth/resetpassword?email={0}", user.Email);
-            var message = new Message(new string[] { user.Email }, "Reset password token", address);
+            var message = new EmailService.Message(new string[] { user.Email }, "Reset password token", address);
             _emailSender.SendEmail(message);
             return Ok();
         }

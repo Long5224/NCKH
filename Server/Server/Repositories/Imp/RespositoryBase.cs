@@ -26,14 +26,17 @@ namespace Server.Repositories.Imp
         public void Create(T entity)
         {
             this.RespositoryContext.Set<T>().Add(entity);
+            this.RespositoryContext.SaveChanges();
         }
         public void Update(T entity)
         {
             this.RespositoryContext.Set<T>().Update(entity);
+            this.RespositoryContext.SaveChanges();
         }
         public void Delete(T entity)
         {
             this.RespositoryContext.Set<T>().Remove(entity);
+            this.RespositoryContext.SaveChanges();
         }
     }
 }

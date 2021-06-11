@@ -27,6 +27,7 @@ namespace Server.Repositories.Imp
         private IStudyTimeRespository _studyTime;
         private IGeneralRespository _general;
         private INotificationRepository _notificationPost;
+        private IMessageRepository _message;
 
         public RepositoryWrapper(NCKH_DBContext repositoryContext, IDataShaper<Student> studentDataShaper, IDataShaper<Class> classDataShaper
             , IDataShaper<Faculty> facultyDataShaper)
@@ -188,6 +189,18 @@ namespace Server.Repositories.Imp
                     _notificationPost = new NotificationRepository(_repoContext);
                 }
                 return _notificationPost;
+            }
+        }
+
+        public IMessageRepository Message
+        {
+            get
+            {
+                if (_message == null)
+                {
+                    _message = new MessageRepository(_repoContext);
+                }
+                return _message;
             }
         }
 

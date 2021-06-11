@@ -16,5 +16,11 @@ namespace Server.Repositories
         User GetUserById(long id);
 
         User GetUserByEmail(string email);
+
+        string GetUserRole(int id);
+
+        User GetUserByUsernameId(long id, string role);
+
+        User GetUserByUsername(string username);
     }
 }

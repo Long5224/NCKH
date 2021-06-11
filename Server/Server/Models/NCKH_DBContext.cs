@@ -55,5 +55,7 @@ namespace Server.Models
         public DbSet<General> Generals { get; set; }
 
         public DbSet<NotificationPost> NotificationPosts { get; set; }
+
+        public DbSet<Message> Messages { get; set; }
     }
 }
