@@ -58,7 +58,7 @@ const Login = () => {
         <Card className="bg-secondary shadow border-0">
           <CardHeader className="bg-transparent pb-5">
             <div className="text-muted text-center mt-2 mb-3">
-              <h1>Sign In</h1>
+              <h1>Đăng nhập</h1>
             </div>
           </CardHeader>
           <CardBody className="px-lg-5 py-lg-5">

@@ -209,7 +209,7 @@ const Sidebar = (props) => {
             {createLinks(routes)}
             <NavItem>
               <NavLink
-                to="/login"
+                to="auth/login"
                 tag={NavLinkRRD}
                 onClick={handleLogout}
                 activeClassName="active"

@@ -25,7 +25,7 @@ const Teacher = (props) => {
     async function getData() {
       const response = await Local.getChildrenById(PATH.API_STUDENTS, id, "teacher" );
       console.log(response);
-      setInfoTeacher({ ...response.data })
+      setInfoTeacher({ ...response.data})
     }
     getData();
   }, [id]);
