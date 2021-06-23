@@ -65,14 +65,9 @@ function Notification(props) {
               <Route exact path={path}>
                 <Card className="shadow">
                   <CardHeader className="border-1 d-flex flex-row">
-                    <h3 className="mb-0">Thông báo</h3>
-                    {currentUserRole ==="teacher" && 
-                      <Link
-                        className="ml-auto btn-add-notification"
-                        to={`${url}/add`}
-                      >
-                        <i class="fas fa-plus"></i>
-                      </Link>
+                  <h3 className="mb-0">Thông báo</h3>
+                    {
+                      currentUser.role == "teacher" ? <Link className="ml-auto btn-add-notification" to={`${url}/add`}><i className="fas fa-plus"></i></Link> : ""
                     }
                   </CardHeader>
                   <CardBody className="pt-1">

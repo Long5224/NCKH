@@ -18,6 +18,7 @@ import {
   Form,
   Modal,
 } from "reactstrap";
+import Skeleton from "react-loading-skeleton";
 
 const UserHeader = (props) => {
   const { data, page, onUpdateAvatar } = props;
@@ -25,7 +26,7 @@ const UserHeader = (props) => {
     imageSrc: "/User_Img.png",
     imageFile: null,
   });
-  
+  const user = AuthService.getCurrentUser()
   const [isSeeMore, setIsSeeMore] = useState(false);
   const [evaluations, setEvaluations] = useState([]);
   const [defaultModal, setDefaultModal] = useState(false);
@@ -115,7 +116,7 @@ const UserHeader = (props) => {
   const updateFile = (updatedData) => {
     if (updatedData.file[0] != null) {
       const formData = new FormData();
-      formData.append("username", data.user.username);
+      formData.append("username", user.username);
       formData.append("avatar", updatedData.file[0]);
       AuthService.update(formData, "update_avatar")
         .then((response) => {
@@ -158,7 +159,7 @@ const UserHeader = (props) => {
                         <img
                           alt="..."
                           className="rounded-circle"
-                          src={data.user.imageSrc}
+                          src={ data.imageSrc}
                         />
                       </a>
                     </div>
@@ -195,34 +196,34 @@ const UserHeader = (props) => {
                     <div className="col">
                       <div className="card-profile-stats  justify-content-center mt-md-5 text-center ">
                         <h3>
-                          {data.value.firstName + " " + data.value.lastName}
+                          {data.value.firstName + " " + data.value.lastName || <Skeleton/>}
                           <span className="font-weight-light">
-                            , {moment(data.value.dateOfBirth).fromNow(true)}
+                            , {moment(data.value.dateOfBirth).fromNow(true) || <Skeleton/>}
                           </span>
                         </h3>
                         <div className="h4 font-weight-300">
                           <i className="ni location_pin mr-2" />
-                          {data.value.placeOfBirth}
+                          {data.value.placeOfBirth || <Skeleton/>}
                         </div>
                         <div className="h4 font-weight-300">
                           <i className="ni location_pin mr-2" />
-                          {data.value.phoneNumber}
+                          {data.value.phoneNumber || <Skeleton/>}
                         </div>
-                        {(data.user.role === "parent" || data.user.role === "student") &&
+                        {(user.role === "parent" || user.role === "student") &&
                         page === "general" ? (
                           <div className="h5 ">
                             <i className="ni business_briefcase-24 mr-2" />
                             {"Khoa " +
                               data.value.class.faculty.name +
-                              " " +
-                              data.value.class.name}
+                              " - Lop " +
+                              data.value.class.name || <Skeleton/>}
                           </div>
                         ) : (
                           ""
                         )}
 
                         <hr className="my-4" />
-                        {(data.role === "parent" || data.role === "teacher") &&
+                        {(user.role === "parent" || user.role === "teacher") &&
                         isSeeMore === true ? (
                           <Card className="shadow mb-3">
                             <CardHeader className="border-0 d-flex">
@@ -260,7 +261,7 @@ const UserHeader = (props) => {
                                         required: true,
                                       })}
                                       disabled={
-                                        data.user.role === "parent" ? true : false
+                                        user.role === "parent" ? true : false
                                       }
                                     ></textarea>
                                   </div>
@@ -269,7 +270,7 @@ const UserHeader = (props) => {
                                 <button
                                   type="submit"
                                   class="btn btn-primary"
-                                  disabled={data.user.role === "parent" ? true : false}
+                                  disabled={user.role === "parent" ? true : false}
                                 >
                                   Submit
                                 </button>
@@ -280,8 +281,8 @@ const UserHeader = (props) => {
                           ""
                         )}
 
-                        {(data.user.role === "parent" && page === "general") ||
-                        (data.user.role === "teacher" && page === "student") ? (
+                        {(user.role === "parent" && page === "general") ||
+                        (user.role === "teacher" && page === "student") ? (
                           isSeeMore === true ? (
                             <span
                               className="seeMore"

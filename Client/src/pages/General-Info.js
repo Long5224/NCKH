@@ -97,7 +97,7 @@ function Index() {
   return (
     <>
       <UserHeader
-        data={{...infoUser, user: user}}
+        data={{...infoUser, imageSrc: user.imageSrc}}
         page="general"
         onUpdateAvatar={handleUpdateAvatar}
       />
