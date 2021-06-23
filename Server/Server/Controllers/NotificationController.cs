@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.AspNetCore.SignalR;
 using Server.DTO;
-
+using Server.Hubs;
 using Server.LoggerService;
 using Server.Models;
 using Server.Models.Entities;
@@ -19,38 +19,53 @@ namespace Server.Controllers
     [Route("api/notification")]
     public class NotificationController : Controller
     {
-        
+        protected readonly IHubContext<NotificationHub> _notificationHub;
 
         private IRepositoryWrapper _repository;
         private LinkGenerator _linkGenerator;
         private ILoggerManager _logger;
 
 
-        public NotificationController(IRepositoryWrapper repository, LinkGenerator linkGenerator, ILoggerManager logger)
+        public NotificationController(IRepositoryWrapper repository, LinkGenerator linkGenerator, ILoggerManager logger, [NotNull] IHubContext<NotificationHub> notificationHub)
         {
-
+            _notificationHub = notificationHub;
             _repository = repository;
             _linkGenerator = linkGenerator;
             _logger = logger;
         }
 
+
+        [HttpPost, Route("post-notification")]
+        public async Task<IActionResult> CreateNotification([FromBody] NotificationsPostDTO notificationPost)
+        {
+            long id = _repository.User.GetUserByUsername(notificationPost.username).id;
+            await _notificationHub.Clients.Group(notificationPost.classId.ToString()).SendAsync("Send", "New Notification");
+            NotificationPost notification = new NotificationPost();
+            notification.content = notificationPost.content;
+            notification.header = notificationPost.header;
+            notification.userId = id;
+            _repository.Notification.Create(notification);
+            return Ok();
+        }
+
+
         [HttpGet("username/{userName}")]
         public IActionResult GetNotificationsByUserName(string userName)
         {
-           
-                var notifications = _repository.Notification.GetNotificationsByUserName(userName);
-                if (notifications == null)
-                {
-                    _logger.LogError($"Notification with userName: {userName}, hasn't been found in db.");
-                    return NotFound();
-                }
-                else
-                {
-                    _logger.LogInfo($"Returned notification with userName: {userName}");
-                    return Ok(notifications);
-                }
-         
-            
+
+            var notifications = _repository.Notification.GetNotificationsByUserName(userName);
+            if (notifications == null)
+            {
+                _logger.LogError($"Notification with userName: {userName}, hasn't been found in db.");
+                return NotFound();
+            }
+            else
+            {
+                _logger.LogInfo($"Returned notification with userName: {userName}");
+                return Ok(notifications);
+            }
+
+
         }
 
         [HttpGet("{id}")]

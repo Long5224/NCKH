@@ -46,5 +46,20 @@ namespace Server.Repositories.Imp
         {
             return FindByCondition(us => us.username.Equals(userName)).Include(us => us.Role).FirstOrDefault();
         }
+
+        public string GetUserRole(int id)
+        {
+            return FindByCondition(us => us.id == id).Include(x => x.Role).FirstOrDefault().Role.code;
+        }
+
+        public User GetUserByUsername(string username)
+        {
+            return FindByCondition(us => us.username.Equals(username)).Include(x => x.Role).FirstOrDefault();
+        }
+        public User GetUserByUsernameId(long id, string role)
+        {
+            return FindByCondition(us => us.username.EndsWith("-" + id.ToString()) && us.Role.code.Equals(role)).Include(x => x.Role).FirstOrDefault();
+        }
+
     }
 }

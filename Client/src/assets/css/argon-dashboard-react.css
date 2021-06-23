@@ -16149,5 +16149,7 @@ button:focus, :focus {
 .table .badge i {
   margin-right: 10px; }
 
-
+.noclick {
+  display: none;
+}
 /*# sourceMappingURL=argon-dashboard-react.css.map */

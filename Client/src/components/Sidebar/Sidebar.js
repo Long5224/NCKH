@@ -55,7 +55,7 @@ const Sidebar = (props) => {
           >
             <i className={prop.icon} />
             {prop.name}
-            <Badge className="badge-danger ml-3">4</Badge>
+            <Badge className="badge-danger ml-3"></Badge>
           </NavLink>
         </NavItem>
       ) : (

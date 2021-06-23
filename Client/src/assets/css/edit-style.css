@@ -113,6 +113,9 @@
  .seeMore:hover {
   color: #5e72e4;
  }
+ .noclick {
+  pointer-events: none;
+}
 /**/
 /*custom pagination*/
 
