@@ -23,25 +23,19 @@ const RecentMessage = (props) => {
                                 id = {item.user.id + "-" + index}
                                 onClick={handleOnClick} 
                                 key={index}>
-                                    <div className="media">
-                                        <img
-                                            src="https://res.cloudinary.com/mhmd/image/upload/v1564960395/avatar_usae7z.svg"
-                                            alt="user"
-                                            width="50"
-                                            className="rounded-circle"
-                                        />
-                                        <div className="media-body ml-4">
-                                            <div className="d-flex align-items-center justify-content-between mb-1">
-                                                <h6 className="mb-0">{item.user.username}</h6>
-                                                <small className="small font-weight-bold">
+                                    <span className="media noclick ">
+                                        
+                                        <span className="media-body ml-4">
+                                            <span className="d-flex align-items-center justify-content-between mb-1">
+                                                <span className="mb-0">{item.user.username}</span>
+                                                <span className="small font-weight-bold">
                                                     {item.recentMessage.sendDate.split("T")[0]}
-                                                </small>
-                                            </div>
-                                            <p className="font-italic mb-0 text-small">
-
-                                            </p>
-                                        </div>
-                                    </div>
+                                                </span>
+                                            </span>
+                                            <span className="font-italic mb-0 text-small">
+                                            </span>
+                                        </span>
+                                    </span>
                                 </button>
                             );
                         })}

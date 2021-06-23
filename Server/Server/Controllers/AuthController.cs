@@ -64,7 +64,7 @@ namespace Server.Controllers
                     new Claim(ClaimTypes.Role, us.Role.code)
                 };
 
-                string tokenString = GenerateToken(claims, 5);
+                string tokenString = GenerateToken(claims, 100);
                 string imageSrc = string.Format("{0}://{1}{2}/Images/{3}", Request.Scheme, Request.Host, Request.PathBase, us.ImageName);
                 return Ok(new { Token = tokenString, username = us.username, role = us.Role.code, email = us.Email,  imageSrc = imageSrc});
             }

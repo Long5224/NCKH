@@ -50,6 +50,7 @@ function Notification(props) {
 
   const currentUserRole = currentUser.role;  
   let { path, url } = useRouteMatch();
+  
   return (
     <>
       {/*Header */}
@@ -75,6 +76,7 @@ function Notification(props) {
                     }
                   </CardHeader>
                   <CardBody className="pt-1">
+                    
                     <Form className="">
                       <div className="p-2 d-flex resFlex-column">
                         <FormGroup className="mb-0 ml-auto edit-form-group ">
@@ -94,13 +96,18 @@ function Notification(props) {
                      
                         {notifications.map((item, index) => {
                        return (
-                        <Link
-                        className=" list-group-item-action px-0"
-                        to={`${url}/${item.id}`}
-                        key={index}
-                      >
-                        {item.header}
-                      </Link>
+                        <ListGroupItem
+                          className=" list-group-item-action px-0"
+
+                        >
+                          <Link
+                            to={`${url}/${item.id}`}
+                            key={index}
+                          >
+                            {item.header}
+                          </Link>
+                        </ListGroupItem>
+                        
                        )
                      })}
                   

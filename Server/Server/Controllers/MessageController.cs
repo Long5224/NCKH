@@ -53,14 +53,15 @@ namespace Server.Controllers
             {
                 receiverId = newMessage.receiverId;
             }
-            await _messageHub.Clients.User(receiverId.ToString()).SendAsync("SendMessage", "New Message");
+            
             Message message = new Message();
             message.sendDate = DateTime.Now;
             message.senderId = senderId;
             message.receiverId = receiverId;
             message.content = newMessage.message;
-            _repository.Message.Create(message);            
-            return Ok();
+            _repository.Message.Create(message);
+            await _messageHub.Clients.User(receiverId.ToString()).SendAsync("SendMessage", message);
+            return Ok(message);
         }
         [HttpGet("username/{userName}")]
         public IActionResult GetMessagesReceivedByUserName(string userName)
